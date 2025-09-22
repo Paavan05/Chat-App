@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ChatContainer = () => {
   return (
-    <div>ChatContainer</div>
+    <div>Krish Limbani</div>
   )
 }
 

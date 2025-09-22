@@ -6,7 +6,7 @@ const Sidebar = ({ SelectedUser, setSelectedUser }) => {
 
     const navigate = useNavigate();
     return (
-        <div className={` bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white ${SelectedUser ? "max-md:hidden" : ''}`}>
+        <div className={` bg-[#8185B2]/10 h-full  p-5 rounded-r-xl overflow-y-scroll text-white ${SelectedUser ? "max-md:hidden" : ''}`}>
             <div className='pb-5'>
                 <div className='flex justify-between items-center'>
                     <img src={assets.logo} alt="" className='max-w-40' />
@@ -21,13 +21,13 @@ const Sidebar = ({ SelectedUser, setSelectedUser }) => {
                 </div>
                 <div className='bg-[#282142] rounded-full flex items-center gap-2 py-3 px-4 mt-5' >
                     <img src={assets.search_icon} alt="Search" className='w-4' />
-                    <input type="text" className='bg-transparent border-none outline-none text-white text-[13px] placeholder-[#c8c8c8] flex-1' placeholder='Search user' />
+                    <input type="text" className='bg-transparent border-none outline-none text-white text-[13px] placeholder-[#c8c8c8] flex-1' placeholder='Search User' />
                 </div>
             </div>
 
             <div className='flex flex-col'>
                 {userDummyData.map((user,index) => (
-                    <div onClick={()=>{setSelectedUser(user)}} key={index} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${SelectedUser?.id === user.id && 'bg-[#282142]/50'}`}>
+                    <div onClick={()=>{setSelectedUser(user)}} key={index} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm border-b-1 border-gray-600 ${SelectedUser?._id === user._id && 'bg-[#282142]/50'}`}>
                         <img src={user?.profilePic || assets.avatar_icon} alt="user image" className='w-[35px] aspect-[1/1] rounded-full' />
                         <div className='flex flex-col leading-5'>
                             <p>{user.fullName}</p>

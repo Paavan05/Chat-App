@@ -58,7 +58,7 @@ export const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
             </div>
         </div>
     ) : (
-        <div className='flex flex-col justify-center items-center h-full gap-2 text-gray-500 bg-white/10 max-md:hidden rounded-xl'>
+        <div className='flex flex-col justify-center items-center h-full gap-2 text-gray-500 bg-white/10 max-md:hidden rounded-r-xl'>
             <img src={assets.logo_icon} alt="app logo" className='max-w-30' />
             <p className='text-2xl font-medium text-white'>Chat anywhere, anytime</p>
         </div>

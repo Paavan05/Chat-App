@@ -6,7 +6,7 @@ const RightSidebar = ({ SelectedUser }) => {
     <div className={` bg-[#8185B2]/10 w-full overflow-y-scroll text-white relative ${SelectedUser ? "max-md:hidden" : ''}`}>
 
       {/* user image, name and bio */}
-      <div className='pt-16 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
+      <div className='pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
         <img src={SelectedUser?.profilePic || assets.avatar_icon} alt=""
           className='w-20 aspect-[1/1] rounded-full' />
         <h1 className='px-10 text-xl font-medium mx-auto flex items-center

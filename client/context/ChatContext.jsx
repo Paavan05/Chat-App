@@ -70,7 +70,7 @@ export const ChatProvider = ({ children }) => {
             ? prevUnseenMessages[newMessage.senderId] + 1
             : 1,
         }));
-        toast.error("");
+        toast(`New message from ${newMessage.senderName || "someone"}`);
       }
     });
   };

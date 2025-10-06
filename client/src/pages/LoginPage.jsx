@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import assets from '../assets/assets'
 import { AuthContext } from '../../context/AuthContex'
+import GoogleLoginButton from '../components/GoogleLoginButton'
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState("Sign up")
@@ -70,10 +71,12 @@ const LoginPage = () => {
           {currState === "Sign up" ? "Create Account" : "Login Now"}
         </button>
 
-        <div className='flex items-center gap-2 text-sm text-gray-500'>
+        <GoogleLoginButton />
+
+        {/* <div className='flex items-center gap-2 text-sm text-gray-500'>
           <input type="checkbox" />
           <p>Agree to the terms of use & privacy policy.</p>
-        </div>
+        </div> */}
 
         <div className='flex flex-col gap-2'>
           {currState === "Sign up" ? (

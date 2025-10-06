@@ -5,6 +5,7 @@ import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const server = http.createServer(app);
@@ -34,9 +35,12 @@ io.on("connection", (socket) => {
   });
 });
 
+const FRONTEND_ORIGIN = process.env.NODE_ENV === "production" ? process.env.PRODUCTION_FRONTEND_URL : process.env.FRONTEND_URL;
+
 //Middleware setup
 app.use(express.json({ limit: "4mb" }));
-app.use(cors());
+app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
+app.use(cookieParser());
 
 //Routes setup
 app.use("/api/status", (req, res) => res.send("Server is live"));

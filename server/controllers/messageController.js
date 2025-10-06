@@ -90,10 +90,17 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     });
 
-    // Emit the new msg to the receiver's socket
+    // Get sender's info
+    const sender = await User.findById(senderId).select("fullName profilePic");
+
+    // Emit the new msg to the receiver's socket with sender info 
     const receiverSocketId = userSocketMap[receiverId];
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      io.to(receiverSocketId).emit("newMessage",{
+        ...newMessage.toObject(),
+        senderName: sender.fullName,
+        senderProfilePic: sender.profilePic,
+      });
     }
 
     res.json({ success: true, newMessage });

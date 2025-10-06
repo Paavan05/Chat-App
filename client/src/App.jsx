@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthContext } from "../context/AuthContex";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/HomePage";
+import OAuthRedirect from "./pages/OAuthRedirect";
 
 const App = () => {
   const { authUser } = useContext(AuthContext);
@@ -14,10 +15,7 @@ const App = () => {
     <div className='bg-[url("/bgImage.svg")] bg-contain'>
       <Toaster />
       <Routes>
-        <Route
-          path='/'
-          element={ <HomePage /> }
-        />
+        <Route path='/' element={<HomePage />} />
         <Route
           path='/dashboard'
           element={authUser ? <Dashboard /> : <Navigate to='/' />}
@@ -30,6 +28,7 @@ const App = () => {
           path='/profile'
           element={authUser ? <ProfilePage /> : <Navigate to='/login' />}
         />
+        <Route path='/oauth-redirect' element={<OAuthRedirect />} />
       </Routes>
     </div>
   );

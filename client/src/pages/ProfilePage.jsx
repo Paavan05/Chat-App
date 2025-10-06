@@ -18,7 +18,7 @@ export const ProfilePage = () => {
 
     if (!selectedImage) {
       await updateProfile({fullName: name, bio});
-      navigate('/');
+      navigate('/dashboard');
       return;
     }
     

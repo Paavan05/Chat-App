@@ -30,6 +30,13 @@ export const signup = async (req, res) => {
 
     const token = generateToken(newUser._id);
 
+     res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.json({
       success: true,
       user: newUser,
@@ -47,6 +54,16 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const userData = await User.findOne({ email });
 
+    if (!userData) return res.status(400).json({ success: false, message: "User not found" });
+
+    // Skip password check for Google users
+    if (userData.oauthProvider === "google") {
+      return res.status(400).json({
+        success: false,
+        message: "Please log in using Google OAuth",
+      });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, userData.password);
 
     if (!isPasswordCorrect) {
@@ -54,6 +71,13 @@ export const login = async (req, res) => {
     }
 
     const token = generateToken(userData._id);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.json({
       success: true,
@@ -189,12 +213,11 @@ export const googleCallback = async (req, res) => {
     }
 
     const token = generateToken(user._id);
-    console.log("JWT Token Generated (googleCallback):", token);
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -211,8 +234,8 @@ export const googleCallback = async (req, res) => {
 // --- STEP 3: Check Auth (using cookie token) ---
 export const checkAuth = async (req, res) => {
   try {
-    let token = req.cookies.token || req.headers.token; // check cookie first, then header
-    if (!token) return res.json({ success: false, message: "Not authenticated" });
+    let token = req.cookies.token || req.headers.token || req.headers.authorization; // check cookie first, then header
+    if (!token) return res.json({ success: false, message: "Not authenticated. jwt must be provided" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select("-password");

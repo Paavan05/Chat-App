@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 // Initialize socket.io server
 export const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: { origin: "*", credentials: true },
 });
 
 // store online users
@@ -35,7 +35,10 @@ io.on("connection", (socket) => {
   });
 });
 
-const FRONTEND_ORIGIN = process.env.NODE_ENV === "production" ? process.env.PRODUCTION_FRONTEND_URL : process.env.FRONTEND_URL;
+const FRONTEND_ORIGIN =
+  process.env.NODE_ENV === "production"
+    ? process.env.PRODUCTION_FRONTEND_URL
+    : process.env.FRONTEND_URL;
 
 //Middleware setup
 app.use(express.json({ limit: "4mb" }));
@@ -50,8 +53,9 @@ app.use("/api/messages", messageRouter);
 //Connect to MongoDB
 await connectDB();
 
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
+
+if (process.env.RENDER === "true" || process.env.NODE_ENV !== "production") {
   server.listen(PORT, () =>
     console.log(`Server is running on http://localhost:${PORT}`)
   );

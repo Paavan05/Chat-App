@@ -9,7 +9,7 @@ const Dashboard = () => {
   const { selectedUser } = useContext(ChatContext);
 
   return (
-    <div className="border w-full h-screen sm:px-[10%] sm:py-[5%]">
+  <div className="border w-full h-screen sm:px-[10%] sm:py-[5%]">
   <div
     className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-full grid relative
     ${selectedUser
@@ -17,20 +17,20 @@ const Dashboard = () => {
       : "grid-cols-1 md:grid-cols-[1fr_2fr]"     // when no user selected
     }`}
   >
-    {/* Sidebar */}
+    
     <div className={`${selectedUser ? "hidden md:flex" : ""}`}>
       <Sidebar />
     </div>
 
-    {/* Chat container */}
+    
     <ChatContainer />
 
-    {/* Right sidebar */}
+    
     <div
       className={`${
         selectedUser
           ? "hidden md:flex" // hide on mobile when chatting
-          : "hidden md:flex" // also hidden when no user selected
+          : "hidden" // also hidden when no user selected
       }`}
     >
       <RightSideBar />

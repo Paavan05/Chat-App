@@ -48,7 +48,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="mt-16 mb-6 text-gray-400 text-sm z-10">
-        © 2025 QuickChat — Crafted with ❤️
+        {new Date().getFullYear()} © QuickChat LLC 
       </footer>
     </div>
   );

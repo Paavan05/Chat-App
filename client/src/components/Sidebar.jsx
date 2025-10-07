@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import assets from '../assets/assets'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContex';
@@ -11,6 +11,8 @@ const Sidebar = () => {
     const { logout, onlineUsers } = useContext(AuthContext);
 
     const [input, setInput] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
+    const menuRef = useRef(null)
 
     const navigate = useNavigate();
 
@@ -21,19 +23,42 @@ const Sidebar = () => {
 
     },[onlineUsers])
 
+    // close menu when clicking outside or pressing Escape (helps mobile behavior)
+    useEffect(() => {
+        const handleOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setMenuOpen(false)
+            }
+        }
+
+        const handleKey = (e) => {
+            if (e.key === 'Escape') setMenuOpen(false)
+        }
+
+        document.addEventListener('mousedown', handleOutside)
+        document.addEventListener('touchstart', handleOutside)
+        document.addEventListener('keydown', handleKey)
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutside)
+            document.removeEventListener('touchstart', handleOutside)
+            document.removeEventListener('keydown', handleKey)
+        }
+    }, [])
+
     return (
         <div className={` bg-[#8185B2]/10 h-full  p-5 rounded-l-xl overflow-y-scroll text-white ${SelectedUser ? "max-md:hidden" : ''}`}>
             <div className='pb-5'>
                 <div className='flex justify-between items-center'>
                     <img src={assets.logo} alt="" className='max-w-40' />
-                    <div className="relative py-2 group">
-                        <img src={assets.menu_icon} alt="Menu" className='max-h-5 cursor-pointer' />
-                        <div className='absolute top-full right-0 z-20 w-32 p-5 rounded-md border border-gray-600 text-gray-100 hidden bg-[#282142] group-hover:block'>
-                            <p className='cursor-pointer text-sm' onClick={()=> navigate('/profile')}>Edit Profile</p>
-                            <hr className="my-2 border-t border-gray-500" />
-                            <p onClick={() => logout()} className='cursor-pointer text-sm'>Logout</p>
+                        <div ref={menuRef} className="relative py-2 group">
+                            <img src={assets.menu_icon} alt="Menu" className='max-h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)} />
+                            <div className={`absolute top-full right-0 z-20 w-32 p-5 rounded-md border border-gray-600 text-gray-100 ${menuOpen ? 'block' : 'hidden'} md:group-hover:block bg-[#282142]`}>
+                                <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); navigate('/profile') }}>Edit Profile</p>
+                                <hr className="my-2 border-t border-gray-500" />
+                                <p onClick={() => { setMenuOpen(false); logout() }} className='cursor-pointer text-sm'>Logout</p>
+                            </div>
                         </div>
-                    </div>
                 </div>
                 <div className='bg-[#282142] rounded-full flex items-center gap-2 py-3 px-4 mt-5' >
                     <img src={assets.search_icon} alt="Search" className='w-4' />

@@ -129,7 +129,10 @@ export const updateProfile = async (req, res) => {
 };
 
 const { FRONTEND_URL, PRODUCTION_FRONTEND_URL } = process.env;
-const FRONTEND_ORIGIN = process.env.NODE_ENV === "production" ? PRODUCTION_FRONTEND_URL : FRONTEND_URL;
+const FRONTEND_ORIGIN =
+  process.env.NODE_ENV === "production"
+    ? PRODUCTION_FRONTEND_URL
+    : FRONTEND_URL;
 
 export const googleAuthRedirect = async (req, res) => {
   try {
@@ -138,13 +141,13 @@ export const googleAuthRedirect = async (req, res) => {
 
     res.cookie("oauth_state", state, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 10 * 60 * 1000,
     });
     res.cookie("oauth_code_verifier", codeVerifier, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 10 * 60 * 1000,
     });
@@ -165,13 +168,20 @@ export const googleCallback = async (req, res) => {
     const codeVerifier = req.cookies?.oauth_code_verifier;
 
     if (!code || !state || !storedState || state !== storedState) {
-      return res.status(400).json({ success: false, message: "Invalid OAuth state" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid OAuth state" });
     }
 
-    const tokens = await googleOAuth.validateAuthorizationCode(code,codeVerifier);
+    const tokens = await googleOAuth.validateAuthorizationCode(
+      code,
+      codeVerifier
+    );
     const accessToken = tokens.accessToken();
 
-    const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo",{
+    const response = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
@@ -230,9 +240,13 @@ export const googleCallback = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    let token = req.cookies.token || req.headers.token || req.headers.authorization; // check cookie first, then header
+    let token =
+      req.cookies.token || req.headers.token || req.headers.authorization; // check cookie first, then header
     if (!token)
-      return res.json({ success: false, message: "Not authenticated. jwt must be provided" });
+      return res.json({
+        success: false,
+        message: "Not authenticated. jwt must be provided",
+      });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select("-password");

@@ -60,7 +60,7 @@ export const ChatContainer = () => {
                     {selectedUser.fullName}
                     {onlineUsers.includes(selectedUser._id) && <span className='w-2 h-2 rounded-full bg-green-500 items-center'></span>}
                 </p>
-                <img src={assets.help_icon} alt="" className='max-m:hidden max-w-5' />
+                {/* <img src={assets.help_icon} alt="" className='max-m:hidden max-w-5' /> */}
             </div>
 
             {/* masseage container */}

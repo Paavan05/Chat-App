@@ -21,7 +21,7 @@ const RightSidebar = () => {
       <div className='pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
         <img src={selectedUser?.profilePic || assets.avatar_icon} alt=""
           className='w-20 aspect-[1/1] rounded-full' />
-        <h1 className='px-10 text-xl font-medium mx-auto flex items-center
+        <h1 className='px-10 text-center text-xl font-medium mx-auto flex items-center
         gap-2'>
           {onlineUsers.includes(selectedUser._id) && <p className='w-2 h-2 rounded-full bg-green-500'></p>}
           {selectedUser.fullName}

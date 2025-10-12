@@ -23,7 +23,7 @@ const Sidebar = () => {
 
     },[onlineUsers])
 
-    // close menu when clicking outside or pressing Escape (helps mobile behavior)
+    // close menu when clicking outside or pressing Escape 
     useEffect(() => {
         const handleOutside = (e) => {
             if (menuRef.current && !menuRef.current.contains(e.target)) {

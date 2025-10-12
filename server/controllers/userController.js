@@ -30,7 +30,7 @@ export const signup = async (req, res) => {
 
     const token = generateToken(newUser._id);
 
-     res.cookie("token", token, {
+    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -54,7 +54,10 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const userData = await User.findOne({ email });
 
-    if (!userData) return res.status(400).json({ success: false, message: "User not found" });
+    if (!userData)
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
 
     // Skip password check for Google users
     if (userData.oauthProvider === "google") {
@@ -91,12 +94,6 @@ export const login = async (req, res) => {
   }
 };
 
-//check if user is authenticated
-// export const checkAuth = (req, res) => {
-//   res.json({ success: true, user: req.user });
-// };
-
-//Update User Profile Details
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic, bio, fullName } = req.body;
@@ -131,7 +128,7 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-const { JWT_SECRET, FRONTEND_URL, PRODUCTION_FRONTEND_URL } = process.env;
+const { FRONTEND_URL, PRODUCTION_FRONTEND_URL } = process.env;
 const FRONTEND_ORIGIN = process.env.NODE_ENV === "production" ? PRODUCTION_FRONTEND_URL : FRONTEND_URL;
 
 export const googleAuthRedirect = async (req, res) => {
@@ -161,7 +158,6 @@ export const googleAuthRedirect = async (req, res) => {
   }
 };
 
-// --- STEP 2: Google Callback ---
 export const googleCallback = async (req, res) => {
   try {
     const { code, state } = req.query;
@@ -175,9 +171,10 @@ export const googleCallback = async (req, res) => {
     const tokens = await googleOAuth.validateAuthorizationCode(code,codeVerifier);
     const accessToken = tokens.accessToken();
 
-    const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo",{
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
     const profile = await response.json();
 
     const googleId = profile.id;
@@ -231,11 +228,11 @@ export const googleCallback = async (req, res) => {
   }
 };
 
-// --- STEP 3: Check Auth (using cookie token) ---
 export const checkAuth = async (req, res) => {
   try {
     let token = req.cookies.token || req.headers.token || req.headers.authorization; // check cookie first, then header
-    if (!token) return res.json({ success: false, message: "Not authenticated. jwt must be provided" });
+    if (!token)
+      return res.json({ success: false, message: "Not authenticated. jwt must be provided" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select("-password");

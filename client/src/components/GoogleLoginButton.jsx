@@ -3,7 +3,7 @@ import googleLogo from '/Google-2025-G-logo.png'
 
 const GoogleLoginButton = () => {
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`; // simply redirect browser to backend endpoint that starts OAuth flow
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`; 
   };
 
   return (

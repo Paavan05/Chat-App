@@ -8,7 +8,10 @@ export const getUsersForSidebar = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const filteredUsers = await User.find({ _id: { $ne: userId } }).select(
+    // Only show friends in sidebar
+    const me = await User.findById(userId).select("friends");
+    const friendIds = me?.friends || [];
+    const filteredUsers = await User.find({ _id: { $in: friendIds } }).select(
       "-password"
     );
 
@@ -39,6 +42,11 @@ export const getMessages = async (req, res) => {
   try {
     const { id: selectedUserId } = req.params;
     const myId = req.user._id;
+
+    // Guard: allow chat only if friends
+    const me = await User.findById(myId).select("friends");
+    const areFriends = me?.friends?.some((f) => String(f) === String(selectedUserId));
+    if (!areFriends) return res.json({ success: false, message: "Not friends" });
 
     const messages = await Message.find({
       $or: [
@@ -83,6 +91,11 @@ export const sendMessage = async (req, res) => {
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
+    // Guard: allow send only if friends
+    const me2 = await User.findById(senderId).select("friends");
+    const canSend = me2?.friends?.some((f) => String(f) === String(receiverId));
+    if (!canSend) return res.json({ success: false, message: "Not friends" });
+    
     const newMessage = await Message.create({
       senderId,
       receiverId,
@@ -93,10 +106,10 @@ export const sendMessage = async (req, res) => {
     // Get sender's info
     const sender = await User.findById(senderId).select("fullName profilePic");
 
-    // Emit the new msg to the receiver's socket with sender info 
+    // Emit the new msg to the receiver's socket with sender info
     const receiverSocketId = userSocketMap[receiverId];
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage",{
+      io.to(receiverSocketId).emit("newMessage", {
         ...newMessage.toObject(),
         senderName: sender.fullName,
         senderProfilePic: sender.profilePic,

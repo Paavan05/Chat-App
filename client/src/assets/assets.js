@@ -21,6 +21,8 @@ import pic3 from './pic3.png'
 import pic4 from './pic4.png'
 import img1 from './img1.jpg'
 import img2 from './img2.jpg'
+import hide_password from './eye-password-hide.svg'
+import show_password from './eye-password-show.svg'
 
 const assets = {
     avatar_icon,
@@ -35,7 +37,9 @@ const assets = {
     arrow_icon,
     code,
     bgImage,
-    profile_martin
+    profile_martin,
+    hide_password,
+    show_password
 }
 
 export default assets;

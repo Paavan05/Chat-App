@@ -4,6 +4,7 @@ import http from "http";
 import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
+import friendRouter from "./routes/friendRoutes.js";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 
@@ -49,6 +50,7 @@ app.use(cookieParser());
 app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/friends", friendRouter);
 
 //Connect to MongoDB
 await connectDB();

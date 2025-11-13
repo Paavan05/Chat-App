@@ -9,6 +9,13 @@ const userSchema = new mongoose.Schema(
     bio: { type: String },
     googleId: { type: String, default: null },
     oauthProvider: { type: String, default: null },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    friendRequests: [
+      {
+        from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

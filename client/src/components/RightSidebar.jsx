@@ -5,8 +5,8 @@ import { AuthContext } from '../../context/AuthContex';
 
 const RightSidebar = () => {
 
-  const { selectedUser, messages } = useContext(ChatContext);
-  const { logout, onlineUsers } = useContext(AuthContext);
+  const { selectedUser, messages, setSelectedUser } = useContext(ChatContext);
+  const { logout, onlineUsers, axios } = useContext(AuthContext);
   const [msgImages, setMsgImages] = useState([])
 
   // Get all images from the messages and set them to state
@@ -19,6 +19,9 @@ const RightSidebar = () => {
 
       {/* user image, name and bio */}
       <div className='pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
+        <div className='md:hidden absolute left-3 top-3'>
+          <img src={assets.arrow_icon} className='w-6 h-6 cursor-pointer'  />
+        </div>
         <img src={selectedUser?.profilePic || assets.avatar_icon} alt=""
           className='w-20 aspect-[1/1] rounded-full' />
         <h1 className='px-10 text-center text-xl font-medium mx-auto flex items-center
@@ -43,11 +46,18 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      <button onClick={() => logout()} className='absolute bottom-5 left-1/2 transform -translate-x-1/2
-      bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none
-      text-sm font-light py-2 px-12 rounded-full cursor-pointer'>
-        Logout
-      </button>
+      <div className='absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-3'>
+        <button 
+          className='bg-red-600 text-white border-none text-sm font-light py-2 px-6 rounded-full cursor-pointer'
+          onClick={async () => { try { await axios.delete(`/api/friends/remove/${selectedUser._id}`); setSelectedUser(null);} catch(e){} }}>
+          Remove Friend
+        </button>
+        <button 
+          className='bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-12 rounded-full cursor-pointer'
+          onClick={() => logout()}>
+          Logout
+        </button>
+      </div>
     </div>
   )
 }

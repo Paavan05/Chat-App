@@ -85,6 +85,16 @@ export const ChatProvider = ({ children }) => {
     return () => unsubscribeFromMessages();
   }, [socket, selectedUser]);
 
+  // refresh users on friendsUpdated socket signal
+  useEffect(() => {
+    if (!socket) return;
+    const handler = () => {
+      getUsers();
+    };
+    socket.on("friendsUpdated", handler);
+    return () => socket.off("friendsUpdated", handler);
+  }, [socket]);
+
   const value = {
     messages,
     users,

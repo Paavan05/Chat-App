@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
+import toast from 'react-hot-toast';
 import assets from '../assets/assets'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContex';
@@ -7,11 +8,16 @@ import { ChatContext } from '../../context/ChatContext';
 const Sidebar = () => {
 
     const { getUsers, users, SelectedUser, setSelectedUser, unseenMessages, setUnseenMessages } = useContext(ChatContext);
+    const { axios } = useContext(AuthContext);
 
     const { logout, onlineUsers } = useContext(AuthContext);
 
     const [input, setInput] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
+    const [friendModal, setFriendModal] = useState(false)
+    const [searchEmail, setSearchEmail] = useState("")
+    const [searchResult, setSearchResult] = useState(null)
+    const [pending, setPending] = useState([])
     const menuRef = useRef(null)
 
     const navigate = useNavigate();
@@ -22,6 +28,21 @@ const Sidebar = () => {
         getUsers();
 
     },[onlineUsers])
+
+    // fetch pending when modal opens
+    useEffect(() => {
+        const run = async () => {
+            if (!friendModal) return;
+            try {
+                const { data } = await axios.get('/api/friends/pending');
+                if (data.success) setPending(data.pending || [])
+                else toast.error(data.message || 'Unable to load pending requests');
+            } catch (e) {
+                toast.error(e.response?.data?.message || e.message);
+            }
+        };
+        run();
+    }, [friendModal])
 
     // close menu when clicking outside or pressing Escape 
     useEffect(() => {
@@ -46,8 +67,8 @@ const Sidebar = () => {
         }
     }, [])
 
-    return (
-        <div className={` bg-[#8185B2]/10 h-full  p-5 rounded-l-xl overflow-y-scroll text-white ${SelectedUser ? "max-md:hidden" : ''}`}>
+    return (<>
+        <div className={`relative bg-[#8185B2]/10 h-full  p-5 rounded-l-xl overflow-y-scroll text-white ${SelectedUser ? "max-md:hidden" : ''}`}>
             <div className='pb-5'>
                 <div className='flex justify-between items-center'>
                     <img src={assets.logo} alt="" className='max-w-40' />
@@ -55,6 +76,8 @@ const Sidebar = () => {
                             <img src={assets.menu_icon} alt="Menu" className='max-h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)} />
                             <div className={`absolute top-full right-0 z-20 w-32 p-5 rounded-md border border-gray-600 text-gray-100 ${menuOpen ? 'block' : 'hidden'} md:group-hover:block bg-[#282142]`}>
                                 <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); navigate('/profile') }}>Edit Profile</p>
+                                <hr className="my-2 border-t border-gray-500" />
+                                <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); setFriendModal(true) }}>Add Friend</p>
                                 <hr className="my-2 border-t border-gray-500" />
                                 <p onClick={() => { setMenuOpen(false); logout() }} className='cursor-pointer text-sm'>Logout</p>
                             </div>
@@ -82,8 +105,115 @@ const Sidebar = () => {
                     </div>
                 ))}
             </div>
+        <div className='absolute bottom-5 right-5 md:right-auto md:left-5 z-10'>
+                <button
+                    className='h-12 w-12 rounded-full bg-violet-600 cursor-pointer text-white text-2xl flex items-center justify-center shadow hover:bg-violet-500 active:scale-95'
+                    onClick={() => setFriendModal(true)}
+                >
+                    +
+                </button>
+            </div>
         </div>
-    )
+        {friendModal && (
+            <div className='fixed inset-0 z-30 flex items-center justify-center bg-black/60'>
+                <div className='w-11/12 max-w-md bg-[#282142] text-white rounded-lg p-4 relative'>
+                    <button onClick={() => setFriendModal(false)} className='absolute right-3 top-2 text-gray-300 cursor-pointer'>✕</button>
+                    <h3 className='text-lg mb-3'>Add Friend</h3>
+                    <div className='flex gap-2 mb-3 max-[350px]:flex-col'>
+                        <input value={searchEmail} onChange={(e)=>setSearchEmail(e.target.value)} type='email' placeholder='Search by email' className='flex-1 bg-transparent border border-gray-600 rounded px-3 py-2 text-sm outline-none max-[350px]:w-full' />
+                        <button onClick={async()=>{
+                            if (!searchEmail.trim()) {
+                                toast.error('Enter an email to search');
+                                return;
+                            }
+                            try {
+                                const { data } = await axios.get(`/api/friends/search?email=${encodeURIComponent(searchEmail.trim())}`)
+                                if (data.success) {
+                                    setSearchResult(data.user);
+                                } else {
+                                    setSearchResult(null);
+                                    toast.error(data.message || 'User not found');
+                                }
+                            } catch(e) {
+                                setSearchResult(null);
+                                toast.error(e.response?.data?.message || e.message);
+                            }
+                        }} className='bg-violet-600 rounded px-4 py-2 text-sm cursor-pointer max-[350px]:w-full max-[350px]:mt-1'>Search</button>
+                    </div>
+                    {searchResult && (
+                        <div className='flex items-center justify-between p-2 border border-gray-700 rounded mb-4'>
+                            <div className='flex items-center gap-2'>
+                                <img src={searchResult.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' />
+                                <div>
+                                    <p className='text-sm'>{searchResult.fullName}</p>
+                                    <p className='text-xs text-gray-300'>{searchResult.email}</p>
+                                </div>
+                            </div>
+                            <button onClick={async()=>{
+                                try {
+                                    const { data } = await axios.post('/api/friends/invite', { toUserId: searchResult._id })
+                                    if (data.success) {
+                                        toast.success(data.message || (data.autoAccepted ? 'Friend request accepted' : 'Invite sent'));
+                                        setSearchEmail(""); setSearchResult(null);
+                                        getUsers();
+                                    } else {
+                                        toast.error(data.message || 'Unable to send invite');
+                                    }
+                                } catch(e) {
+                                    toast.error(e.response?.data?.message || e.message);
+                                }
+                            }} className='bg-green-600 rounded px-3 text-sm cursor-pointer'>Add</button>
+                        </div>
+                    )}
+
+                    <h4 className='text-sm mb-2'>Pending Friend Requests</h4>
+                    <div className='space-y-2 max-h-52 overflow-y-auto'>
+                        {pending.length === 0 && <p className='text-xs text-gray-300'>No pending requests</p>}
+                        {pending.map((p, idx)=> (
+                            <div key={idx} className='flex items-center justify-between p-2 border border-gray-700 rounded'>
+                                <div className='flex items-center gap-2'>
+                                    <img src={(p.from?.profilePic) || assets.avatar_icon} className='w-8 h-8 rounded-full' />
+                                    <div>
+                                        <p className='text-sm'>{p.from?.fullName}</p>
+                                        <p className='text-xs text-gray-300'>{p.from?.email}</p>
+                                    </div>
+                                </div>
+                                <div className='flex gap-2'>
+                                    <button onClick={async()=>{
+                                        try {
+                                            const { data } = await axios.post('/api/friends/respond', { fromUserId: p.from._id, accept: true })
+                                            if (data.success) {
+                                                toast.success('Friend request accepted');
+                                                setPending(prev=>prev.filter(x=>x.from._id!==p.from._id));
+                                                getUsers();
+                                            } else {
+                                                toast.error(data.message || 'Unable to accept request');
+                                            }
+                                        } catch(e) {
+                                            toast.error(e.response?.data?.message || e.message);
+                                        }
+                                    }} className='bg-green-600 rounded px-3 text-sm cursor-pointer'>Accept</button>
+                                    <button onClick={async()=>{
+                                        try {
+                                            const { data } = await axios.post('/api/friends/respond', { fromUserId: p.from._id, accept: false })
+                                            if (data.success) {
+                                                toast.success('Friend request rejected');
+                                                setPending(prev=>prev.filter(x=>x.from._id!==p.from._id));
+                                            } else {
+                                                toast.error(data.message || 'Unable to reject request');
+                                            }
+                                        } catch(e) {
+                                            toast.error(e.response?.data?.message || e.message);
+                                        }
+                                    }} className='bg-red-600 rounded px-3 text-sm cursor-pointer'>Reject</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )}
+    </>)
 }
 
 export default Sidebar

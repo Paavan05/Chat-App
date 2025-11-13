@@ -8,12 +8,14 @@ import toast from 'react-hot-toast';
 export const ChatContainer = () => {
 
     const { messages, selectedUser, setSelectedUser, sendMessage, getMessages } = useContext(ChatContext)
-    const { authUser, onlineUsers } = useContext(AuthContext)
+    const { authUser, onlineUsers, axios } = useContext(AuthContext)
 
     const scrollEnd = useRef();
 
     const [input, setInput] = useState('');
-
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+    
     // Handle sending a message
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -51,6 +53,22 @@ export const ChatContainer = () => {
         }
     }, [messages])
 
+    // close mobile header menu on outside click / escape
+    useEffect(() => {
+        const handleOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+        };
+        const handleKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+        document.addEventListener('mousedown', handleOutside);
+        document.addEventListener('touchstart', handleOutside);
+        document.addEventListener('keydown', handleKey);
+        return () => {
+            document.removeEventListener('mousedown', handleOutside);
+            document.removeEventListener('touchstart', handleOutside);
+            document.removeEventListener('keydown', handleKey);
+        };
+    }, []);
+
     return selectedUser ? (
         <div className='h-full relative overflow-scroll backdrop-blur-lg'>
             <div className='flex items-center gap-3 py-3 mx-4 border-b border-stone-500'>
@@ -60,6 +78,24 @@ export const ChatContainer = () => {
                     {selectedUser.fullName}
                     {onlineUsers.includes(selectedUser._id) && <span className='w-2 h-2 rounded-full bg-green-500 items-center'></span>}
                 </p>
+                <div ref={menuRef} className='relative md:hidden'>
+                    <img src={assets.menu_icon} alt="Menu" className='max-h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)} />
+                    {menuOpen && (
+                        <div className='absolute right-0 top-full z-20 w-36 p-3 rounded-md border border-gray-600 text-gray-100 bg-[#282142]'>
+                            <button
+                                onClick={async()=>{
+                                    try {
+                                        await axios.delete(`/api/friends/remove/${selectedUser._id}`);
+                                        setMenuOpen(false);
+                                        setSelectedUser(null);
+                                    } catch(e) {}
+                                }}
+                                className='w-full text-left text-sm bg-red-600 hover:bg-red-700 rounded px-3 py-1'>
+                                Remove Friend
+                            </button>
+                        </div>
+                    )}
+                </div>
                 {/* <img src={assets.help_icon} alt="" className='max-m:hidden max-w-5' /> */}
             </div>
 

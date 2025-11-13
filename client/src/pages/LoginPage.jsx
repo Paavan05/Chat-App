@@ -10,6 +10,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("")
   const [bio, setBio] = useState("")
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
   const { login } = useContext(AuthContext);
 
@@ -51,10 +52,22 @@ const LoginPage = () => {
              border border-gray-500 rounded-md focus:outline-none focus:ring-2
              focus:ring-indigo-500'/>
 
-            <input onChange={(e) => setPassword(e.target.value)} value={password}
-              type="password" placeholder='Enter password' required className='p-2
-              border border-gray-500 rounded-md focus:outline-none focus:ring-2
-              focus:ring-indigo-500'/>
+            <div className="relative w-full">
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                required
+                className="w-full p-2 pr-10 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <img
+                src={showPassword ? assets.show_password : assets.hide_password}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 cursor-pointer select-none opacity-80 hover:opacity-100 transition-opacity"
+                alt={showPassword ? "Hide password" : "Show password"}
+              />
+            </div>
           </>
         )}
         {

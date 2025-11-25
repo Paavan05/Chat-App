@@ -46,17 +46,30 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      <div className='absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-3'>
-        <button 
-          className='bg-red-600 text-white border-none text-sm font-light py-2 px-6 rounded-full cursor-pointer'
-          onClick={async () => { try { await axios.delete(`/api/friends/remove/${selectedUser._id}`); setSelectedUser(null);} catch(e){} }}>
-          Remove Friend
-        </button>
-        <button 
-          className='bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-12 rounded-full cursor-pointer'
-          onClick={() => logout()}>
-          Logout
-        </button>
+      <div className='sticky bottom-0 left-0 w-full px-5 pb-6 pt-4 bg-gradient-to-t from-[#0f0f12]/80 via-[#0f0f12]/50 to-transparent'>
+        <div className='flex gap-3 max-md:flex-col'>
+          <button
+            type='button'
+            onClick={async () => {
+              try {
+                await axios.delete(`/api/friends/remove/${selectedUser._id}`);
+                setSelectedUser(null);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            className='flex-1 bg-gradient-to-r from-[#FF4D4D] to-[#B30000] text-white text-xs font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
+          >
+            Remove Friend
+          </button>
+          <button
+            type='button'
+            onClick={logout}
+            className='flex-1 bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   )

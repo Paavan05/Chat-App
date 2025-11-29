@@ -54,7 +54,7 @@ export default function HomePage() {
           <a href="#" className="hover:text-white transition">Contact Us</a>
         </div>
         <p className="text-center">
-          {new Date().getFullYear()} © QuickChat LLC | All Rights Reserved
+          {new Date().getFullYear()} © QuickChat LLC | All Rights Reserved.
         </p>
       </footer>
     </div>

@@ -46,7 +46,7 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      <div className=' bottom-0 left-0 w-full px-5 pb-6 pt-4 bg-gradient-to-t from-[#0f0f12]/80 via-[#0f0f12]/50 to-transparent'>
+      <div className=' bottom-0 left-0 w-full px-2 pb-6 pt-1 bg-gradient-to-t from-[#0f0f12]/80 via-[#0f0f12]/50 to-transparent'>
         <div className='flex gap-3 max-md:flex-col'>
           <button
             type='button'

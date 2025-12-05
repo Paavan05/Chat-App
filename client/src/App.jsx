@@ -7,6 +7,8 @@ import { AuthContext } from "../context/AuthContex";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/HomePage";
 import OAuthRedirect from "./pages/OAuthRedirect";
+import Feature from "./pages/Feature";
+import About from "./pages/About";
 
 const App = () => {
   const { authUser } = useContext(AuthContext);
@@ -29,6 +31,8 @@ const App = () => {
           element={authUser ? <ProfilePage /> : <Navigate to='/login' />}
         />
         <Route path='/oauth-redirect' element={<OAuthRedirect />} />
+        <Route path="/feature" element={<Feature/>}/>
+        <Route path="/about" element={<About/>}/>
       </Routes>
     </div>
   );

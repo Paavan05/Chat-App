@@ -7,9 +7,11 @@ import reactImage from '../assets/react.svg';
 import mongoImage from '../assets/mongodb-icon.svg';
 import expressImage from '../assets/express.png';
 import nodeImage from '../assets/Node.svg';
+import { useState } from "react";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [visitorEmail, setVisitorEmail] = useState("");
 
   return (
     <>
@@ -174,11 +176,13 @@ export default function HomePage() {
 
               <div className="flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 relative">
                 <input
-                  type="text"
+                  type="email"
                   placeholder="Your email…"
-                  className="bg-transparent flex-1 text-white px-2  focus:outline-none"
+                  value={visitorEmail}
+                  onChange={(e) => setVisitorEmail(e.target.value)}
+                  className="bg-transparent flex-1 text-white px-2 focus:outline-none"
                 />
-                <button className="bg-purple-500 hover:bg-purple-600 px-2  py-1 rounded-lg text-white font-medium absolute right-3">
+                <button className="bg-purple-500 hover:bg-purple-600 px-2  py-1 rounded-lg text-white font-medium absolute right-3 cursor-pointer" onClick={()=> setVisitorEmail("")}>
                   Send
                 </button>
               </div>

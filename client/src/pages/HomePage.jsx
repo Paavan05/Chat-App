@@ -28,7 +28,7 @@ export default function HomePage() {
             className="text-left sm:text-left z-10 pl-5 xl:pl-0 w-80 xl:w-2/5"
           >
             <h1 className="text-4xl text-black md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-black">Build to Connect</span></h1>
-            <p className="text-[#a2a2a2] mb-5 xl:text-lg xl:w-80">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
+            <p className="text-[#757474] mb-5 xl:text-lg xl:w-80">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}

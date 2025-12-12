@@ -20,20 +20,20 @@ export default function HomePage() {
 
 
         {/* Hero Section */}
-        <div className="w-full flex sm:flex-row flex-col justify-around  items-center bg-[#302746] px-4 sm:px-6 md:px-1 lg:px-20  xl:px-32 py-10 sm:py-0 ">
+        <div className="w-full flex sm:flex-row flex-col justify-around  items-center bg-[#EFF5F7] px-4 sm:px-6 md:px-1 lg:px-20  xl:px-32 py-10 sm:py-0">
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
             className="text-left sm:text-left z-10 pl-5 xl:pl-0 w-80 xl:w-2/5"
           >
-            <h1 className="text-4xl md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-purple-400">Build to Connect</span></h1>
-            <p className="text-gray-300 mb-5 xl:text-lg xl:w-80">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
+            <h1 className="text-4xl text-black md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-black">Build to Connect</span></h1>
+            <p className="text-[#a2a2a2] mb-5 xl:text-lg xl:w-80">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/login")}
-              className="backdrop-blur-lg cursor-pointer bg-white/20 border border-white/30 shadow-xl text-white font-semibold px-6 py-3 rounded-full hover:bg-white/30 transition"
+              className="backdrop-blur-lg cursor-pointer bg-[#1681E3] border border-white/30 shadow-xl text-white font-semibold px-6 py-3 rounded-full hover:bg-[#0f66b8]"
             >
               Get Started
             </motion.button>

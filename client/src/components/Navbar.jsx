@@ -8,23 +8,23 @@ const Navbar = () => {
   return (
     <nav className="relative z-40 w-full flex items-center justify-between
       px-4 sm:px-6 md:px-8 lg:px-20 xl:px-43 py-4
-      bg-[#3E3256] border-b border-white/20 shadow-md">
+      bg-white border-b border-white/20 shadow-md">
 
       {/* Logo */}
-      <div className="text-white font-bold text-2xl tracking-wide">
-        QuickChat
+      <div className=" font-bold text-2xl tracking-wide">
+        Convergo
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden sm:flex items-center space-x-8 text-gray-200">
-        <NavLink to="/" className="hover:text-white transition">Home</NavLink>
-        <NavLink to="/feature" className="hover:text-white transition">Features</NavLink>
-        <NavLink to="/about" className="hover:text-white transition">About</NavLink>
+      <div className="hidden sm:flex items-center space-x-8 text-gray-700 ">
+        <NavLink to="/" className="hover:text-gray-00 transition">Home</NavLink>
+        <NavLink to="/feature" className="hover:text-gray-900 transition">Features</NavLink>
+        <NavLink to="/about" className="hover:text-gray-900 transition">About</NavLink>
 
         <NavLink
           to="/login"
-          className="px-4 py-1.5 border border-white/40 rounded-lg
-            hover:bg-white hover:text-[#3E3256] transition"
+          className="px-4 py-1.5 border border-gray-900/40 rounded-lg
+            hover:bg-[#3599FF] text-white bg-[#1681E3] transition"
         >
           Login
         </NavLink>

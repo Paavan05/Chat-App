@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <nav className="relative z-40 w-full flex items-center justify-between
+    <nav
+      className="relative z-40 w-full flex items-center justify-between
       px-4 sm:px-6 md:px-8 lg:px-20 xl:px-43 py-4
-      bg-white border-b border-white/20 shadow-md">
+      bg-white border-b border-slate-200 shadow-md text-slate-900
+      dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 transition-colors"
+    >
 
       {/* Logo */}
       <div className=" font-bold text-2xl tracking-wide">
@@ -16,14 +21,47 @@ const Navbar = () => {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden sm:flex items-center space-x-8 text-gray-700 ">
-        <NavLink to="/" className="hover:text-gray-00 transition">Home</NavLink>
-        <NavLink to="/feature" className="hover:text-gray-900 transition">Features</NavLink>
-        <NavLink to="/about" className="hover:text-gray-900 transition">About</NavLink>
+      <div className="hidden sm:flex items-center space-x-4 md:space-x-6 text-gray-700 ">
+        <NavLink
+          to="/"
+          className="hover:text-gray-900 dark:hover:text-white dark:text-white transition"
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/feature"
+          className="hover:text-gray-900 dark:hover:text-white dark:text-white transition"
+        >
+          Features
+        </NavLink>
+        <NavLink
+          to="/about"
+          className="hover:text-gray-900 dark:hover:text-white dark:text-white transition"
+        >
+          About
+        </NavLink>
+
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-white text-black px-2 py-2 text-sm font-medium transition hover:bg-slate-100 dark:hover:bg-slate-800"
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? (
+            <>
+              <Sun size={18} />
+              Light
+            </>
+          ) : (
+            <>
+              <Moon size={18} />
+              Dark
+            </>
+          )}
+        </button>
 
         <NavLink
           to="/login"
-          className="px-4 py-1.5 border border-gray-900/40 rounded-lg
+          className="px-4 py-1.5 border border-gray-900/40 dark:border-blue-400/60 rounded-lg
             hover:bg-[#3599FF] text-white bg-[#1681E3] transition"
         >
           Login
@@ -31,7 +69,11 @@ const Navbar = () => {
       </div>
 
       {/* Mobile hamburger */}
-      <button className="sm:hidden text-white" onClick={() => setOpen(!open)}>
+      <button
+        className="sm:hidden text-black dark:text-white"
+        onClick={() => setOpen(!open)}
+        aria-label="Toggle navigation menu"
+      >
         {open ? <X size={26} /> : <Menu size={26} />}
       </button>
 
@@ -48,9 +90,20 @@ const Navbar = () => {
         <div
           className="fixed left-1/2 top-[72px] z-50 w-[92%] max-w-xs
             -translate-x-1/2 rounded-2xl border border-white/20
-            bg-white/10 backdrop-blur-xl shadow-xl p-5 sm:hidden"
+            bg-white/90 dark:bg-slate-900 backdrop-blur-xl shadow-xl p-5 sm:hidden text-slate-900 dark:text-slate-100"
         >
-          <div className="flex flex-col gap-4 text-center text-white text-lg">
+          <div className="flex flex-col gap-4 text-center text-lg">
+            <button
+              onClick={() => {
+                toggleTheme();
+                setOpen(false);
+              }}
+              className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </button>
+
             <NavLink to="/" onClick={() => setOpen(false)}>Home</NavLink>
             <NavLink to="/feature" onClick={() => setOpen(false)}>Features</NavLink>
             <NavLink to="/about" onClick={() => setOpen(false)}>About</NavLink>
@@ -58,7 +111,7 @@ const Navbar = () => {
             <NavLink
               to="/login"
               onClick={() => setOpen(false)}
-              className="mt-1 bg-white text-[#3E3256] py-2 rounded-xl font-semibold shadow transition"
+              className="mt-1 bg-[#1681E3] text-white py-2 rounded-xl font-semibold shadow transition hover:bg-[#0f66b8]"
             >
               Login
             </NavLink>

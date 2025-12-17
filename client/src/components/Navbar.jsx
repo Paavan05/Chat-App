@@ -1,18 +1,49 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { theme, toggleTheme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY + 10) {
+        setHidden(true); // scrolling down
+      } else if (currentY < lastScrollY - 10) {
+        setHidden(false); // scrolling up
+      }
+      setLastScrollY(currentY);
+    };
+
+    const handleResize = () => {
+      // keep navbar visible after resize jumps
+      setHidden(false);
+      setLastScrollY(window.scrollY || 0);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [lastScrollY]);
 
   return (
     <nav
-      className="relative z-40 w-full flex items-center justify-between
-      px-4 sm:px-6 md:px-8 lg:px-20 xl:px-43 py-4
+      className={`fixed top-0 z-40 w-full flex items-center justify-between
+      px-4 sm:px-6 md:px-8 lg:px-20 xl:px-43 py-4 
       bg-white border-b border-slate-200 shadow-md text-slate-900
-      dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 transition-colors"
+      dark:bg-[#080809] dark:border-slate-800 dark:text-slate-100
+      transform transition-[colors,transform] duration-300 ${hidden ? "-transla te-y-full" : "translate-y-0"}`}
     >
 
       {/* Logo */}

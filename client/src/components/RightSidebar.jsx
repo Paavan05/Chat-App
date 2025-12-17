@@ -15,7 +15,7 @@ const RightSidebar = () => {
   }, [messages])
 
   return selectedUser && (
-    <div className={`relative bg-[#8185B3]/10 w-full h-full flex flex-col text-white  ${selectedUser ? "max-md:hidden" : ''}`}>
+    <div className={`relative bg-white dark:bg-[#131326] w-full h-full flex flex-col text-white ${selectedUser ? "max-md:hidden" : ''}`}>
 
       {/* user image, name and bio */}
       <div className='pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
@@ -25,19 +25,18 @@ const RightSidebar = () => {
         <img src={selectedUser?.profilePic || assets.avatar_icon} alt=""
           className='w-20 aspect-[1/1] rounded-full' />
         <h1 className='px-10 text-center text-xl font-medium mx-auto flex items-center
-        gap-2'>
+        gap-2  text-black dark:text-white'>
           {onlineUsers.includes(selectedUser._id) && <p className='w-2 h-2 rounded-full bg-green-500'></p>}
           {selectedUser.fullName}
         </h1>
-        <p className='px-10 mx-auto'>{selectedUser.bio}</p>
+        <p className='px-10 mx-auto text-black dark:text-white font-medium'>{selectedUser.bio}</p>
       </div>
 
-      <hr className='border-[#ffffff50] my-4' />
+      <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
 
-      <div className='px-5 text-xs flex-1 overflow-y-auto '>
-        <p className='text-sm'>Media</p>
-        <div className='mt-2 max-h-[335px] overflow-y-scroll grid grid-cols-2
-        gap-4 opacity-80'>
+      <div className='px-5 text-xs flex-1 overflow-y-auto'>
+        <p className='text-sm text-black dark:text-white'>Media</p>
+        <div className='mt-2 grid grid-cols-2 gap-4 opacity-80'>
           {msgImages.map((url, index) => (
             <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded'>
               <img src={url} alt="" className='h-full rounded-md' />
@@ -46,8 +45,8 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      <div className=' bottom-0 left-0 w-full px-2 pb-6 pt-1 bg-gradient-to-t from-[#0f0f12]/80 via-[#0f0f12]/50 to-transparent'>
-        <div className='flex gap-3 max-md:flex-col'>
+      <div className='mt-auto w-full px-2 pb-6 pt-1'>
+        <div className='flex flex-col lg:flex-row gap-3 max-md:flex-col'>
           <button
             type='button'
             onClick={async () => {

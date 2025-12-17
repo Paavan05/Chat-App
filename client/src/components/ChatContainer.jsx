@@ -4,7 +4,7 @@ import { formatMassageTime } from '../lib/util';
 import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContex';
 import toast from 'react-hot-toast';
-import { EllipsisVertical, Images } from 'lucide-react';
+import { EllipsisVertical, Images, Send } from 'lucide-react';
 
 export const ChatContainer = () => {
 
@@ -107,7 +107,7 @@ export const ChatContainer = () => {
                         {msg.image ? (
                             <img src={msg.image} alt="" className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-8 ' />
                         ) : (
-                            <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-1g mb-8 rounded-2xl break-all bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>{msg.text}</p>
+                            <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-1g mb-8 rounded-2xl break-all bg-gray-300 text-black ${msg.senderId === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>{msg.text}</p>
                         )}
 
                         {/* chat proflile image */}
@@ -132,7 +132,10 @@ export const ChatContainer = () => {
                         <Images className="w-5 mr-2 cursor-pointer dark:text-black "/>
                     </label>
                 </div>
-                <img onClick={handleSendMessage} src={assets.send_button} alt="" className="w-7 cursor-pointer" />
+                {/* <img onClick={handleSendMessage} src={assets.send_button} alt="" className="w-7 cursor-pointer" /> */}
+                <div className='dark:bg-violet-600 bg-gray-500 rounded-full p-2 '>
+                <Send onClick={handleSendMessage} className='w-7 cursor-pointer text-white' />
+                </div>
             </div>
         </div>
     ) : (

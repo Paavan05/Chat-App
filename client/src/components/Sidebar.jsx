@@ -9,7 +9,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 const Sidebar = () => {
 
-    const { getUsers, users, SelectedUser, setSelectedUser, unseenMessages, setUnseenMessages } = useContext(ChatContext);
+    const { getUsers, users, selectedUser, setSelectedUser, unseenMessages, setUnseenMessages } = useContext(ChatContext);
     const { axios } = useContext(AuthContext);
 
     const { logout, onlineUsers } = useContext(AuthContext);
@@ -71,7 +71,7 @@ const Sidebar = () => {
     }, [])
 
     return (<>
-        <div className={`relative bg-white dark:bg-[#131326] h-full p-5 rounded-l-xl overflow-x-hidden overflow-y-auto text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-800 transition-colors ${SelectedUser ? "max-md:hidden" : ''}`}>
+        <div className={`relative bg-white dark:bg-[#131326] h-full p-5 rounded-l-xl overflow-x-hidden overflow-y-auto text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-800 transition-colors ${selectedUser ? "max-md:hidden" : ''}`}>
             <div className='pb-5'>
                 <div className='flex justify-between items-center'>
                     {/* <img src={assets.logo} alt="" className='max-w-40' /> */}
@@ -111,7 +111,7 @@ const Sidebar = () => {
 
             <div className='flex flex-col'>
                 {filteredUsers.map((user,index) => (
-                    <div onClick={()=>{setSelectedUser(user); setUnseenMessages((prev) => ({...prev, [user._id]: 0}))}} key={index} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm border-b border-slate-200 dark:border-gray-600 transition-colors ${SelectedUser?._id === user._id && 'bg-slate-100 dark:bg-[#282142]/50'}`}>
+                    <div onClick={()=>{setSelectedUser(user); setUnseenMessages((prev) => ({...prev, [user._id]: 0}))}} key={index} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm border-b border-slate-200 dark:border-gray-600 transition-colors ${selectedUser?._id === user._id && 'bg-slate-100 dark:bg-[#282142]/50'}`}>
                         <img src={user?.profilePic || assets.avatar_icon} alt="user image" className='w-[35px] aspect-[1/1] rounded-full' />
                         <div className='flex flex-col leading-5'>
                             <p>{user.fullName}</p>
@@ -127,7 +127,7 @@ const Sidebar = () => {
             </div>
         <div className='absolute bottom-5 right-5 md:right-auto md:left-5 z-10'>
                 <button
-                    className='h-12 w-12 rounded-full bg-violet-600 cursor-pointer text-white text-2xl flex items-center justify-center shadow hover:bg-violet-500 active:scale-95'
+                    className='h-12 w-12 rounded-full dark:bg-violet-600 bg-gray-500 cursor-pointer text-white text-2xl flex items-center justify-center shadow dark:hover:bg-violet-500 hover:bg-gray-600 active:scale-95'
                     onClick={() => setFriendModal(true)}
                 >
                     +

@@ -34,18 +34,21 @@ const RightSidebar = () => {
 
       <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
 
-      <div className='px-5 text-xs flex-1 overflow-y-auto'>
-        <p className='text-sm text-black dark:text-white'>Media</p>
-        <div className='mt-2 grid grid-cols-2 gap-4 opacity-80'>
+      {/* media section */}
+      <p className='text-sm text-black  dark:text-white p-2'>Media</p>
+      <div className=' absolute top-58  px-5 text-xs flex flex-col h-60 w-full min-w-30 overflow-y-auto '>
+        <div className='mt-2 columns-2 opacity-80 '>
           {msgImages.map((url, index) => (
-            <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded'>
-              <img src={url} alt="" className='h-full rounded-md' />
+            <div key={index} onClick={() => window.open(url)} className='cursor-pointer p-1 rounded'>
+              <img src={url} alt="" className='w-full h-auto object-cover rounded-md' />
             </div>
           ))}
         </div>
       </div>
 
-      <div className='mt-auto w-full px-2 pb-6 pt-1'>
+
+      {/* remove friend and log out button  */}
+      <div className='absolute bottom-0 w-full px-2 p-4 mt-2 bg-white dark:bg-[#131326] border-b border-b-gray-500'>
         <div className='flex flex-col lg:flex-row gap-3 max-md:flex-col'>
           <button
             type='button'
@@ -64,7 +67,7 @@ const RightSidebar = () => {
           <button
             type='button'
             onClick={logout}
-            className='flex-1 bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
+            className='flex-1 bg-gray-600 dark:bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
           >
             Logout
           </button>

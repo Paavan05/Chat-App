@@ -48,7 +48,7 @@ const Navbar = () => {
 
       {/* Logo */}
       <div className=" font-bold text-2xl tracking-wide">
-        Convergo
+        FlowTalk
       </div>
 
       {/* Desktop Menu */}
@@ -72,9 +72,10 @@ const Navbar = () => {
           About
         </NavLink>
 
+        {/* theme toggle button */}
         <button
           onClick={toggleTheme}
-          className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-white text-black px-2 py-2 text-sm font-medium transition hover:bg-slate-100 dark:hover:bg-slate-800"
+          className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-white text-black px-2 py-2 text-sm font-medium transition hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (
@@ -111,7 +112,7 @@ const Navbar = () => {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 sm:hidden"
+          className="fixed inset-0 bg-black/40 z-40 h-screen sm:hidden"
           onClick={() => setOpen(false)}
         />
       )}
@@ -121,9 +122,13 @@ const Navbar = () => {
         <div
           className="fixed left-1/2 top-[72px] z-50 w-[92%] max-w-xs
             -translate-x-1/2 rounded-2xl border border-white/20
-            bg-white/90 dark:bg-slate-900 backdrop-blur-xl shadow-xl p-5 sm:hidden text-slate-900 dark:text-slate-100"
+            bg-white dark:bg-[#080809] backdrop-blur-xl shadow-xl p-5 sm:hidden text-slate-900 dark:text-slate-100"
         >
           <div className="flex flex-col gap-4 text-center text-lg">
+
+            <NavLink to="/" onClick={() => setOpen(false)}>Home</NavLink>
+            <NavLink to="/feature" onClick={() => setOpen(false)}>Features</NavLink>
+            <NavLink to="/about" onClick={() => setOpen(false)}>About</NavLink>
             <button
               onClick={() => {
                 toggleTheme();
@@ -134,10 +139,6 @@ const Navbar = () => {
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
-
-            <NavLink to="/" onClick={() => setOpen(false)}>Home</NavLink>
-            <NavLink to="/feature" onClick={() => setOpen(false)}>Features</NavLink>
-            <NavLink to="/about" onClick={() => setOpen(false)}>About</NavLink>
 
             <NavLink
               to="/login"

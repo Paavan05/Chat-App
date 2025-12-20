@@ -4,7 +4,7 @@ import { Clock3, Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ComingSoon = ({ title, subtitle }) => (
-  <div className="min-h-screen bg-[#f7f8fc] dark:bg-[#0C0C0D] text-slate-900 dark:text-slate-100 transition-colors flex flex-col">
+  <div className="min-h-screen bg-[#f7f8fc] dark:bg-[#0C0C0D] text-slate-900 dark:text-slate-100 transition-colors flex flex-col pt-10">
     <Navbar />
 
     <main className="flex-1 flex items-center justify-center px-4 py-12">

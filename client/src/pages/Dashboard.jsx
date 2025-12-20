@@ -25,7 +25,7 @@ const Dashboard = () => {
       </button>
 
       <div
-        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-full grid relative
+        className={`backdrop-blur-xl border-2 shadow-2xl border-gray-300 dark:border-gray-600 rounded-2xl overflow-hidden h-full grid relative
           ${selectedUser
             ? "grid-cols-1 md:grid-cols-[1fr_2fr_1fr]" // when user selected
             : "grid-cols-1 md:grid-cols-[1fr_2fr]" // when no user selected

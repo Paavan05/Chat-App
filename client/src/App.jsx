@@ -14,7 +14,7 @@ const App = () => {
   const { authUser } = useContext(AuthContext);
 
   return (
-    <div className='min-h-screen bg-[#F7F8FC] bg-cover text-gray-900 dark:text-slate-100 dark:bg-slate-950 dark:bg-none transition-colors'>
+    <div className='min-h-screen bg-[#F7F8FC] bg-cover text-gray-900 dark:text-slate-100 dark:bg-[#080809] dark:bg-none transition-colors'>
       <Toaster />
       <Routes>
         <Route path='/' element={<HomePage />} />

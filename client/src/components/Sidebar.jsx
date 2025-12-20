@@ -71,13 +71,13 @@ const Sidebar = () => {
     }, [])
 
     return (<>
-        <div className={`relative bg-white dark:bg-[#131326] h-full p-5 rounded-l-xl overflow-x-hidden overflow-y-auto text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-800 transition-colors ${selectedUser ? "max-md:hidden" : ''}`}>
+        <div className={`relative bg-white dark:bg-[#080809] w-full h-full p-5 rounded-l-xl overflow-x-hidden overflow-y-auto text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-800 transition-colors ${selectedUser ? "max-md:hidden" : ''}`}>
             <div className='pb-5'>
                 <div className='flex justify-between items-center'>
                     {/* <img src={assets.logo} alt="" className='max-w-40' /> */}
                     <div className='flex items-center gap-2'>
                     <MessageCircleMore className='w-6 h-6 cursor-pointer dark:text-white text-black' />
-                    <h3 className='text-lg font-bold'>Convergo</h3>
+                    <h3 className='text-lg font-bold'>FlowTalk</h3>
                     </div>
                         <div ref={menuRef} className="relative py-2 group">
                             <EllipsisVertical className='w-5 h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)}/>
@@ -127,7 +127,7 @@ const Sidebar = () => {
             </div>
         <div className='absolute bottom-5 right-5 md:right-auto md:left-5 z-10'>
                 <button
-                    className='h-12 w-12 rounded-full dark:bg-violet-600 bg-gray-500 cursor-pointer text-white text-2xl flex items-center justify-center shadow dark:hover:bg-violet-500 hover:bg-gray-600 active:scale-95'
+                    className='h-12 w-12 rounded-full dark:bg-violet-600 bg-blue-800 cursor-pointer text-white text-2xl flex items-center justify-center shadow dark:hover:bg-violet-500 hover:bg-blue-900 active:scale-95'
                     onClick={() => setFriendModal(true)}
                 >
                     +

@@ -15,7 +15,7 @@ const RightSidebar = () => {
   }, [messages])
 
   return selectedUser && (
-    <div className={`relative bg-white dark:bg-[#131326] w-full h-full flex flex-col text-white ${selectedUser ? "max-md:hidden" : ''}`}>
+    <div className={`relative bg-white dark:bg-[#080809] border-l-1 border-gray-200 dark:border-gray-800 w-full h-full flex flex-col text-white ${selectedUser ? "max-md:hidden" : ''}`}>
 
       {/* user image, name and bio */}
       <div className='pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
@@ -37,7 +37,7 @@ const RightSidebar = () => {
       {/* media section */}
       <p className='text-sm text-black  dark:text-white p-2'>Media</p>
       <div className=' absolute top-58  px-5 text-xs flex flex-col h-60 w-full min-w-30 overflow-y-auto '>
-        <div className='mt-2 columns-2 opacity-80 '>
+        <div className='mt-2 columns-2  opacity-80 '>
           {msgImages.map((url, index) => (
             <div key={index} onClick={() => window.open(url)} className='cursor-pointer p-1 rounded'>
               <img src={url} alt="" className='w-full h-auto object-cover rounded-md' />
@@ -48,7 +48,7 @@ const RightSidebar = () => {
 
 
       {/* remove friend and log out button  */}
-      <div className='absolute bottom-0 w-full px-2 p-4 mt-2 bg-white dark:bg-[#131326] border-b border-b-gray-500'>
+      <div className='absolute bottom-0 w-full px-2 p-4 mt-2 bg-white dark:bg-[#080809]  '>
         <div className='flex flex-col lg:flex-row gap-3 max-md:flex-col'>
           <button
             type='button'
@@ -67,7 +67,7 @@ const RightSidebar = () => {
           <button
             type='button'
             onClick={logout}
-            className='flex-1 bg-gray-600 dark:bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
+            className='flex-1 bg-blue-800 dark:bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
           >
             Logout
           </button>

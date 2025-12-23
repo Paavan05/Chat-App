@@ -125,6 +125,8 @@ const Sidebar = () => {
                     </div>
                 ))}
             </div>
+
+        {/* add friend icon */}
         <div className='absolute bottom-5 right-5 md:right-auto md:left-5 z-10'>
                 <button
                     className='h-12 w-12 rounded-full dark:bg-violet-600 bg-blue-800 cursor-pointer text-white text-2xl flex items-center justify-center shadow dark:hover:bg-violet-500 hover:bg-blue-900 active:scale-95'
@@ -134,10 +136,12 @@ const Sidebar = () => {
                 </button>
             </div>
         </div>
+
+        {/* add friend box */}
         {friendModal && (
-            <div className='fixed inset-0 z-30 flex items-center justify-center bg-black/60'>
-                <div className='w-11/12 max-w-md max-h-[85vh] overflow-y-auto bg-[#282142] text-white rounded-lg p-4 relative'>
-                    <button onClick={() => setFriendModal(false)} className='absolute right-3 top-2 text-gray-300 cursor-pointer'>✕</button>
+            <div className='fixed inset-0 z-30 flex items-center justify-center bg-black/60 '>
+                <div className='w-11/12 max-w-md max-h-[85vh] overflow-y-auto bg-white dark:bg-[#282142] text-black dark:text-white rounded-lg p-4 relative'>
+                    <button onClick={() => setFriendModal(false)} className='absolute right-3 top-2 text-black dark:text-gray-300 cursor-pointer'>✕</button>
                     <h3 className='text-lg mb-3'>Add Friend</h3>
                     <div className='flex gap-2 mb-3 max-[350px]:flex-col'>
                         <input value={searchEmail} onChange={(e)=>setSearchEmail(e.target.value)} type='email' placeholder='Search by email' className='flex-1 bg-transparent border border-gray-600 rounded px-3 py-2 text-sm outline-none max-[350px]:w-full' />
@@ -158,7 +162,7 @@ const Sidebar = () => {
                                 setSearchResult(null);
                                 toast.error(e.response?.data?.message || e.message);
                             }
-                        }} className='bg-violet-600 rounded px-4 py-2 text-sm cursor-pointer max-[350px]:w-full max-[350px]:mt-1'>Search</button>
+                        }} className='bg-violet-600 text-white rounded px-4 py-2 text-sm cursor-pointer max-[350px]:w-full max-[350px]:mt-1'>Search</button>
                     </div>
                     {searchResult && (
                         <div className='flex items-center justify-between p-2 border border-gray-700 rounded mb-4'>

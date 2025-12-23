@@ -36,7 +36,7 @@ const RightSidebar = () => {
 
       {/* media section */}
       <p className='text-sm text-black  dark:text-white p-2'>Media</p>
-      <div className=' absolute top-58  px-5 text-xs flex flex-col h-60 w-full min-w-30 overflow-y-auto '>
+      <div className=' absolute top-58  px-5 text-xs flex flex-col h-30 w-full min-w-30 overflow-y-auto '>
         <div className='mt-2 columns-2  opacity-80 '>
           {msgImages.map((url, index) => (
             <div key={index} onClick={() => window.open(url)} className='cursor-pointer p-1 rounded'>

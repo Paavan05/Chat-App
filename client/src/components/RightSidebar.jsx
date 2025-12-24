@@ -64,13 +64,13 @@ const RightSidebar = () => {
           >
             Remove friend
           </button>
-          <button
+          {/* <button
             type='button'
             onClick={logout}
             className='flex-1 bg-blue-800 dark:bg-gradient-to-r from-purple-400 to-violet-600 text-white text-sm font-medium py-3 rounded-full cursor-pointer transition hover:opacity-90'
           >
             Logout
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

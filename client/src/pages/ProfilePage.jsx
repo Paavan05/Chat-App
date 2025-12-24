@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import assets from '../assets/assets';
 import { AuthContext } from '../../context/AuthContex';
 
 export const ProfilePage = () => {
 
-  const { authUser, updateProfile } = useContext(AuthContext)
+  const { authUser, updateProfile } = useContext(AuthContext);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
@@ -27,13 +27,16 @@ export const ProfilePage = () => {
     reader.onload = async () => {
       const base64Image = reader.result;
       await updateProfile({profilePic: base64Image, fullName: name, bio});
-      navigate('/')
+      navigate('/dashboard')
     }
   }
 
 
   return (
     <div className='min-h-screen bg-cover bg-no-repeat flex items-center justify-center'>
+      <NavLink to='/dashboard' className="cursor-pointer absolute left-9 top-3 sm:left-6 sm:top-6 z-50 md:inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold">
+        <img src={assets.arrow_icon} alt="back icon" className='w-5' />
+      </NavLink>
       <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 
        border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>

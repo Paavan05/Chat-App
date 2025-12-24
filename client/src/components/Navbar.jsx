@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/AuthContex";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { authUser } = useContext(AuthContext);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -92,11 +94,11 @@ const Navbar = () => {
         </button>
 
         <NavLink
-          to="/login"
+          to={authUser ? "/dashboard" : "/login"}
           className="px-4 py-1.5 border border-gray-900/40 dark:border-blue-400/60 rounded-lg
             hover:bg-[#3599FF] text-white bg-[#1681E3] transition"
         >
-          Login
+          {authUser ? "Start Chatting" : "Login"}
         </NavLink>
       </div>
 
@@ -141,11 +143,11 @@ const Navbar = () => {
             </button>
 
             <NavLink
-              to="/login"
+              to={authUser ? "/dashboard" : "/login"}
               onClick={() => setOpen(false)}
               className="mt-1 bg-[#1681E3] text-white py-2 rounded-xl font-semibold shadow transition hover:bg-[#0f66b8]"
             >
-              Login
+              {authUser ? "Start Chatting" : "Login"}
             </NavLink>
           </div>
         </div>

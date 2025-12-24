@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import toast from 'react-hot-toast';
 import assets from '../assets/assets'
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContex';
 import { ChatContext } from '../../context/ChatContext';
-import { EllipsisVertical, MessageCircleMore, Moon, Search, Sun } from 'lucide-react';
+import { EllipsisVertical, MessageCircleMore, Moon, Search, Sun, Bell } from 'lucide-react';
 import { ThemeContext } from '../../context/ThemeContext';
 
 const Sidebar = () => {
 
     const { getUsers, users, selectedUser, setSelectedUser, unseenMessages, setUnseenMessages } = useContext(ChatContext);
-    const { axios } = useContext(AuthContext);
 
-    const { logout, onlineUsers } = useContext(AuthContext);
+    const { logout, onlineUsers, authUser, axios, socket } = useContext(AuthContext);
     const { theme, toggleTheme } = useContext(ThemeContext);
 
     const [input, setInput] = useState(false)
@@ -21,6 +20,8 @@ const Sidebar = () => {
     const [searchEmail, setSearchEmail] = useState("")
     const [searchResult, setSearchResult] = useState(null)
     const [pending, setPending] = useState([])
+    const [notifications, setNotifications] = useState(0)
+    const [notificationBox, setNotificationBox] = useState(false)
     const menuRef = useRef(null)
 
     const navigate = useNavigate();
@@ -29,23 +30,52 @@ const Sidebar = () => {
 
     useEffect(()=>{
         getUsers();
-
     },[onlineUsers])
 
-    // fetch pending when modal opens
+    // // fetch pending when modal opens
+    // useEffect(() => {
+    //     const run = async () => {
+    //         if (!friendModal) return;
+    //         try {
+    //             const { data } = await axios.get('/api/friends/pending');
+    //             if (data.success) setPending(data.pending || [])
+    //             else toast.error(data.message || 'Unable to load pending requests');
+    //         } catch (e) {
+    //             toast.error(e.response?.data?.message || e.message);
+    //         }
+    //     };
+    //     run();
+    // }, [friendModal])
+
+    const fetchPending = useCallback(async () => {
+        try {
+            const { data } = await axios.get('/api/friends/pending');
+            setNotifications(data.pending.length)
+            if (data.success) setPending(data.pending || []);
+            else toast.error(data.message || 'Unable to load pending requests');
+        } catch (e) {
+            toast.error(e.response?.data?.message || e.message);
+        }
+    }, [axios]);
+
     useEffect(() => {
-        const run = async () => {
-            if (!friendModal) return;
-            try {
-                const { data } = await axios.get('/api/friends/pending');
-                if (data.success) setPending(data.pending || [])
-                else toast.error(data.message || 'Unable to load pending requests');
-            } catch (e) {
-                toast.error(e.response?.data?.message || e.message);
-            }
+        fetchPending();
+    }, []);
+
+    // Listen for real-time friend request updates
+    useEffect(() => {
+        if (!socket) return;
+        
+        const handleFriendsUpdated = () => {
+            fetchPending();
         };
-        run();
-    }, [friendModal])
+        
+        socket.on("friendsUpdated", handleFriendsUpdated);
+        
+        return () => {
+            socket.off("friendsUpdated", handleFriendsUpdated);
+        };
+    }, [socket, fetchPending]);
 
     // close menu when clicking outside or pressing Escape 
     useEffect(() => {
@@ -76,31 +106,35 @@ const Sidebar = () => {
                 <div className='flex justify-between items-center'>
                     {/* <img src={assets.logo} alt="" className='max-w-40' /> */}
                     <div className='flex items-center gap-2'>
-                    <MessageCircleMore className='w-6 h-6 cursor-pointer dark:text-white text-black' />
-                    <h3 className='text-lg font-bold'>FlowTalk</h3>
+                        <MessageCircleMore className='w-6 h-6 cursor-pointer dark:text-white text-black' />
+                        <h3 className='text-lg font-bold'>FlowTalk</h3>
                     </div>
-                        <div ref={menuRef} className="relative py-2 group">
-                            <EllipsisVertical className='w-5 h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)}/>
-                            <div className={`absolute top-full right-0 z-20 w-32 p-5 rounded-md border border-slate-200 dark:border-gray-600 text-slate-900 dark:text-gray-100 ${menuOpen ? 'block' : 'hidden'} md:group-hover:block bg-white dark:bg-[#282142] shadow-lg`}>
-                                <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); navigate('/profile') }}>Edit Profile</p>
-                                <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
-                                <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); setFriendModal(true) }}>Add Friend</p>
-                                <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
-                                <p onClick={() => { setMenuOpen(false); logout() }} className='cursor-pointer text-sm'>Logout</p>
-                                <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        toggleTheme();
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center justify-between gap-2 text-left text-sm cursor-pointer hover:opacity-90"
-                                >
-                                    <span>{theme === "dark" ? "Light" : "Dark"}</span>
-                                    {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-                                </button>
-                            </div>
+                    <div className='absolute right-13'>
+                        <span className={`${notifications > 0 ? "h-5 w-5 text-center text-sm absolute bottom-3.5 left-2.5 rounded-full  bg-red-600 " : ""}`}>{notifications > 0 ? notifications : ''}</span>
+                        <Bell onClick={()=> {setNotificationBox(true)}} className='cursor-pointer' />
+                    </div>
+                    <div ref={menuRef} className="relative py-2 group">
+                        <EllipsisVertical className='w-5 h-5 cursor-pointer' onClick={() => setMenuOpen(prev => !prev)}/>
+                        <div className={`absolute top-full right-0 z-20 w-32 p-5 rounded-md border border-slate-200 dark:border-gray-600 text-slate-900 dark:text-gray-100 ${menuOpen ? 'block' : 'hidden'} md:group-hover:block bg-white dark:bg-[#282142] shadow-lg`}>
+                            {/* <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); navigate('/profile') }}>Edit Profile</p>
+                            <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
+                            <p className='cursor-pointer text-sm' onClick={() => { setMenuOpen(false); setFriendModal(true) }}>Add Friend</p>
+                            <hr className="my-2 border-t border-gray-200 dark:border-gray-500" /> */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    toggleTheme();
+                                    setMenuOpen(false);
+                                }}
+                                className="w-full flex items-center justify-between gap-2 text-left text-sm cursor-pointer hover:opacity-90"
+                            >
+                                <span>{theme === "dark" ? "Light" : "Dark"}</span>
+                                {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+                            </button>
+                            <hr className="my-2 border-t border-gray-200 dark:border-gray-500" />
+                            <p onClick={() => { setMenuOpen(false); logout() }} className='cursor-pointer text-sm'>Logout</p>
                         </div>
+                    </div>
                 </div>
                 <div className='bg-slate-100 dark:bg-[#282142] rounded-full flex items-center gap-2 py-3 px-4 mt-5 transition-colors' >
                     {/* <img src={assets.search_icon} alt="Search" className='w-4 dark:text-white text-black' /> */}
@@ -116,18 +150,28 @@ const Sidebar = () => {
                         <div className='flex flex-col leading-5'>
                             <p>{user.fullName}</p>
                             {
+                                onlineUsers.includes(user._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 items-center absolute top-2 left-11'></span>
+                            }
+                            {/* {
                                 onlineUsers.includes(user._id)
                                 ? <span className='text-green-400 text-xs'>Online</span>
                                 : <span className='text-neutral-500 dark:text-neutral-400 text-xs'>Offline</span>
-                            }
+                            } */}
                         </div> 
                         {unseenMessages[user._id] > 0 && <p className='absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full text-black font-medium bg-green-400'>{unseenMessages[user._id]}</p>}
                     </div>
                 ))}
             </div>
 
-        {/* add friend icon */}
-        <div className='absolute bottom-5 right-5 md:right-auto md:left-5 z-10'>
+            {/* Edit Profile */}
+            <div className='absolute bottom-5 left-5 z-10'>
+                <NavLink to='/profile'>
+                    <img src={authUser?.profilePic || assets.logo_icon} alt="" className='h-12 w-12 rounded-full' />
+                </NavLink>
+            </div>
+
+            {/* add friend icon */}
+            <div className='absolute bottom-5 right-5 z-10'>
                 <button
                     className='h-12 w-12 rounded-full dark:bg-violet-600 bg-blue-800 cursor-pointer text-white text-2xl flex items-center justify-center shadow dark:hover:bg-violet-500 hover:bg-blue-900 active:scale-95'
                     onClick={() => setFriendModal(true)}
@@ -190,6 +234,16 @@ const Sidebar = () => {
                         </div>
                     )}
 
+                    
+                </div>
+            </div>
+        )}
+
+        {/* Notification Box */}
+        {notificationBox && (
+            <div className='fixed inset-0 z-30 flex items-center justify-center bg-black/60 '>
+                <div className='w-11/12 max-w-md max-h-[85vh] overflow-y-auto bg-white dark:bg-[#282142] text-black dark:text-white rounded-lg p-4 relative'>
+                    <button onClick={() => setNotificationBox(false)} className='absolute right-3 top-2 text-black dark:text-gray-300 cursor-pointer'>✕</button>
                     <h4 className='text-sm mb-2'>Pending Friend Requests</h4>
                     <div className='space-y-2 max-h-52 overflow-y-auto'>
                         {pending.length === 0 && <p className='text-xs text-gray-300'>No pending requests</p>}
@@ -209,6 +263,7 @@ const Sidebar = () => {
                                             if (data.success) {
                                                 toast.success('Friend request accepted');
                                                 setPending(prev=>prev.filter(x=>x.from._id!==p.from._id));
+                                                setNotifications(prev => Math.max(0, prev - 1));
                                                 getUsers();
                                             } else {
                                                 toast.error(data.message || 'Unable to accept request');
@@ -223,6 +278,7 @@ const Sidebar = () => {
                                             if (data.success) {
                                                 toast.success('Friend request rejected');
                                                 setPending(prev=>prev.filter(x=>x.from._id!==p.from._id));
+                                                setNotifications(prev => Math.max(0, prev - 1));
                                             } else {
                                                 toast.error(data.message || 'Unable to reject request');
                                             }

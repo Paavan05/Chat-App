@@ -131,7 +131,7 @@ export const ChatContainer = () => {
             </div>
 
             {/* chat container input area */}
-            <div className='flex items-center gap-3 p-3 pl-0 shrink-0'>
+            <div className='flex items-center gap-2 p-3 pl-0 shrink-0 w-[80%['>
                 <div className='flex-1 flex items-center bg-gray-200 px-3 rounded-full' >
                     <input onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => e.key === "Enter" ? handleSendMessage(e) : null} type="text" placeholder="Send a message"
                         className='flex-1 text-sm p-3 border-none rounded-lg outline-none dark:text-black font-medium text-gray-300 placeholder-gray-900 dark:placeholder-gray-600' />
@@ -141,7 +141,7 @@ export const ChatContainer = () => {
                     </label>
                 </div>
                 <div className='dark:bg-violet-600 bg-blue-800 rounded-full p-2 '>
-                    <Send onClick={handleSendMessage} className='w-7 cursor-pointer text-white' />
+                    <Send onClick={handleSendMessage} className='w-5 h-auto cursor-pointer text-white' />
                 </div>
             </div>
         </div>

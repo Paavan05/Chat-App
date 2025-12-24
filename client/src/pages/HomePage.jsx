@@ -12,7 +12,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 export default function HomePage() {
   const navigate = useNavigate();
   const [visitorEmail, setVisitorEmail] = useState("");
-  const {theme, toggleTheme} = useContext(ThemeContext)
+  const { theme, toggleTheme } = useContext(ThemeContext)
 
   return (
     <>
@@ -49,10 +49,10 @@ export default function HomePage() {
         </div>
 
         {/* Features Section */}
-        <div className="w-full bg-white dark:bg-[#080809] pt-16 pb-20 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-42 transition-colors">
+        <div className="w-full bg-white dark:bg-[#080809] py-26  px-4 sm:px-6 md:px-10 lg:px-20 xl:px-42 transition-colors">
 
           {/* Section Title */}
-          <h2 className="text-2xl font-semibold mb-10 text-gray-900 dark:text-white">Features Spotlight</h2>
+          <h2 className="text-3xl font-semibold mb-10 text-gray-900 dark:text-white">Features Spotlight</h2>
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -76,7 +76,7 @@ export default function HomePage() {
             ].map((f, i) => (
               <div
                 key={i}
-                className="bg-[#F1F4F5] dark:bg-[#1F1F23] p-6 rounded-xl border border-white/10 dark:border-slate-800 shadow-sm text-center transition-colors"
+                className="bg-[#F1F4F5] dark:bg-[#1F1F23] p-6 py-20 rounded-xl border border-white/10 dark:border-slate-800 shadow-sm text-center transition-colors"
               >
                 <div className="mb-4 flex justify-center items-center">{f.icon}</div>
                 <h3 className="text-lg text-gray-900 dark:text-white font-semibold mb-2">{f.title}</h3>
@@ -87,7 +87,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        
+
 
         <div className="relative w-full h-130 flex items-center justify-center bg-white dark:bg-[#080809]">
           <div

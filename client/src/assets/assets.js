@@ -23,6 +23,7 @@ import img1 from './img1.jpg'
 import img2 from './img2.jpg'
 import hide_password from './eye-password-hide.svg'
 import show_password from './eye-password-show.svg'
+import login_page_image from './loginpageimage.webp'
 
 const assets = {
     avatar_icon,
@@ -39,7 +40,8 @@ const assets = {
     bgImage,
     profile_martin,
     hide_password,
-    show_password
+    show_password,
+    login_page_image
 }
 
 export default assets;

@@ -81,3 +81,13 @@ body {
   stroke-dasharray: 20 300;
   stroke-dashoffset: -32.42;
 }
+
+          
+.footer-text {
+  -webkit-text-stroke: 1px white;
+  background: linear-gradient(to right, #9333ea, #ec4899, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  paint-order: stroke fill;
+}

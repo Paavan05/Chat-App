@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react'
 import assets from '../assets/assets'
 import { AuthContext } from '../../context/AuthContex'
 import GoogleLoginButton from '../components/GoogleLoginButton'
+import { motion } from "framer-motion";
+import { MessageCircle } from 'lucide-react';
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState("Sign up")
@@ -27,9 +29,10 @@ const LoginPage = () => {
 
   return (
     <div className='min-h-screen bg-slate-50 dark:bg-slate-950 bg-cover bg-center flex items-center
-     justify-center gap-8 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl text-slate-900 dark:text-slate-100 transition-colors  '>
+     justify-center gap-5 sm:gap-0 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl text-slate-900 dark:text-slate-100 transition-colors  '>
       {/* ----------- left ---------- */}
-      <img src={assets.logo_big} alt="" className='w-[150px] sm:w-[200px] md:w-[315px]' />
+      <img src={assets.login_page_image} alt="" className='w-[150px] sm:w-[300px] md:w-[400px]' />
+    
       {/* ----------- right ---------- */}
 
       <form onSubmit={onSubmitHandler} className='border-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-gray-200 dark:border-slate-700 p-6 flex flex-col

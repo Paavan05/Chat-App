@@ -4,27 +4,29 @@ import { LockKeyhole, MessageCircle, Zap } from "lucide-react";
 import darshboard_image_light from "../assets/dashboard_image_light.png"
 import darshboard_image_dark from "../assets/dashboard_image_dark.png"
 import Navbar from "../components/Navbar";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Footer from "../components/Footer"
 import { ThemeContext } from "../../context/ThemeContext";
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap";
 
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [visitorEmail, setVisitorEmail] = useState("");
   const { theme, toggleTheme } = useContext(ThemeContext)
+  
 
   return (
     <>
       {/* navbar */}
-      <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-slate-100 relative overflow-hidden transition-colors pt-10">
-
+      <Navbar/>
+      <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-slate-100 relative overflow-hidden transition-colors">
 
         {/* Hero Section */}
-        <div className="w-full flex flex-col pt-30 justify-around items-center bg-white dark:bg-[#080809]  transition-colors">
+        <div className="w-full flex flex-col pt-60 justify-around items-center bg-white dark:bg-[#080809]  transition-colors">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center z-10 pl-5 xl:pl-0 w-80 xl:w-2/5"
@@ -32,7 +34,7 @@ export default function HomePage() {
             <h1 className="text-4xl text-gray-900 w-full dark:text-white md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-gray-900 dark:text-white">Build to Connect</span></h1>
             <p className="text-[#757474] dark:text-slate-300 mb-5 xl:text-lg ">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
             <motion.button
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1, }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/login")}
               className="backdrop-blur-lg cursor-pointer bg-[#1681E3] border border-white/30 shadow-xl text-white font-semibold px-6 py-3 rounded-full hover:bg-[#0f66b8]"

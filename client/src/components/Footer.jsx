@@ -58,7 +58,15 @@ const Footer = () => {
 
                 </div>
             </div>
-            
+            {/* Large filled background word at bottom-center (decorative) */}
+            <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-16">
+                <svg className="w-full h-40 md:h-56" viewBox="0 0 1200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <text x="50%" y="85%" textAnchor="middle" fill="currentColor" className="text-black/6 dark:text-white/6" style={{fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontWeight: 800}} fontSize="180">
+                        FlowTalk
+                    </text>
+                </svg>
+            </div>
+
         </footer>
     );
 };

@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import OAuthRedirect from "./pages/OAuthRedirect";
 import Feature from "./pages/Feature";
 import About from "./pages/About";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const { authUser } = useContext(AuthContext);
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/oauth-redirect' element={<OAuthRedirect />} />
         <Route path="/feature" element={<Feature/>}/>
         <Route path="/about" element={<About/>}/>
+        <Route path="*" element={<NotFound/>}/>
       </Routes>
     </div>
   );

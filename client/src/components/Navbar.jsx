@@ -1,15 +1,51 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { AuthContext } from "../../context/AuthContex";
+import {useGSAP} from '@gsap/react';
+import gsap from "gsap";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const navRef = useRef()
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { authUser } = useContext(AuthContext);
+  
+  let isDark = theme === "dark" ? true : false;
+
+  useGSAP(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        // User scrolled down → apply animation
+        gsap.to(navRef.current, {
+          borderBottomWidth: isDark ? "0px" : "1px",
+          borderBottomColor: isDark ? "transparent" : "#d1d5db", // slate-300
+          boxShadow: isDark ? "0 6px 20px -2px rgba(255,255,255,0.2)" : "0 6px 20px -2px rgba(0,0,0,0.15)", // white glow in dark mode
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      } else {
+        // User back at top → reset styles
+        gsap.to(navRef.current, {
+          borderBottomWidth: "0px",
+          borderBottomColor: "transparent",
+          boxShadow: "none",
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
+
+
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -41,11 +77,12 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 z-40 w-full flex items-center justify-between
-      px-4 sm:px-6 md:px-8 lg:px-20 xl:px-43 py-4 
-      bg-white border-b border-slate-200 shadow-md text-slate-900
+      ref={navRef}
+      className={`navbar fixed top-5 z-40 w-[95%] xl:w-[85%] flex items-center justify-between
+      px-4 sm:px-6 md:px-8 py-4 rounded-full mx-2.5 sm:mx-5  xl:mx-29 
+      bg-white text-slate-900
       dark:bg-[#080809] dark:border-slate-800 dark:text-slate-100
-      transform transition-[colors,transform] duration-300 ${hidden ? "-transla te-y-full" : "translate-y-0"}`}
+      transform transition-[colors,transform] duration-300 ${hidden ? "-translate-y-0" : "translate-y-1"}`}
     >
 
       {/* Logo */}

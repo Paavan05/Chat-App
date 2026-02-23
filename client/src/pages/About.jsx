@@ -12,21 +12,21 @@ const About = () => {
   const teamMembers = [
     {
       id: 1,
+      name: "Paavan Dhameliya",
+      role: "Backend Developer",
+      initials: "PD",
+      gradient: "from-purple-400 to-purple-600",
+      github: "https://github.com/Paavan05",
+      email: "paavanhn13@gmail.com",
+    },
+    {
+      id: 2,
       name: "Krish Limbani",
       role: "Frontend Developer",
       initials: "KL",
       gradient: "from-blue-400 to-blue-600",
       github: "https://github.com/KrishLimbani",
       email: "krishlimbani01@gmail.com",
-    },
-    {
-      id: 2,
-      name: "Paavan Dhameliya",
-      role: "UI/UX Designer",
-      initials: "SD",
-      gradient: "from-purple-400 to-purple-600",
-      github: "https://github.com/Paavan05",
-      email: "paavanhn13@gmail.com",
     },
     
   ];
@@ -61,35 +61,35 @@ const About = () => {
               <h3 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Key Highlights</h3>
               <ul className="space-y-3 text-slate-600 dark:text-slate-400">
                 <li className='flex items-start'>
-                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1"></span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1">&#10003;</span>
                   <span>
                     <strong>Real-time Messaging:</strong>
                      Instant message delivery using WebSocket technology
                   </span>
                 </li>
                 <li className='flex items-start'>
-                  <span className="text-blue-600 mr-3 mt-1"></span>
+                  <span className="text-blue-600 mr-3 mt-1">&#10003;</span>
                   <span>
                     <strong>OAuth Authentication:</strong>
                      Secure login with OAuth integration
                   </span>
                 </li>
                 <li className='flex items-start'>
-                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1"></span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1">&#10003;</span>
                   <span>
                     <strong>User Profiles:</strong>
                      Customizable profiles with avatars and status
                   </span>
                 </li>
                 <li className='flex items-start'>
-                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1"></span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1">&#10003;</span>
                   <span>
                     <strong>Responsive Design:</strong>
                      Works seamlessly across all device sizes
                   </span>
                 </li>
                 <li className='flex items-start'>
-                  <span className='text-blue-600 mr-3 mt-1'></span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-3 mt-1">&#10003;</span>
                   <span>
                     <strong>Friend System: </strong>
                      Add friends and manage your contact list
@@ -98,6 +98,58 @@ const About = () => {
               </ul>
             </div>
            </div>
+        </div>
+      </section>
+
+
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#080809]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-black dark:text-white mb-12 text-left">How It Works</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Real-time Communication */}
+            <div>
+              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Real-time Communication</h3>
+              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
+                Chat-App uses <strong className="text-blue-400">WebSocket technology</strong> to establish persistent, bidirectional communication channels between clients and the server. This allows messages to be transmitted instantly without the need for constant polling.
+              </p>
+              <p className="dark:text-slate-300 text-black leading-relaxed">
+                When you send a message, it's immediately transmitted to the server, validated, stored in our MongoDB database, and pushed to all relevant recipients in real-time.
+              </p>
+            </div>
+
+            {/* Secure Authentication */}
+            <div>
+              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Secure Authentication</h3>
+              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
+                We integrate <strong className="text-blue-400">OAuth 2.0</strong> context to provide secure, modern authentication. Users can sign in using their existing accounts from trusted providers, eliminating the need to manage additional passwords.
+              </p>
+              <p className="dark:text-slate-300 text-black leading-relaxed">
+                <strong className="text-blue-400">JWT tokens</strong> are used for session management, ensuring that sensitive operations are protected and user data remains secure throughout their session.
+              </p>
+            </div>
+
+            {/* State Management */}
+            <div>
+              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">State Management</h3>
+              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
+                Our application uses <strong className="text-blue-400">React Context API</strong> to manage global state efficiently. This includes user authentication state, theme preferences, and chat data.
+              </p>
+              <p className="dark:text-slate-300 text-black leading-relaxed">
+                Each context (AuthContext, ChatContext, ThemeContext) handles a specific domain, keeping the application organized and maintainable.
+              </p>
+            </div>
+
+            {/* Data Persistence */}
+            <div>
+              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Data Persistence</h3>
+              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
+                All messages, user profiles, and relationships are stored in <strong className="text-blue-400">MongoDB</strong>, a flexible NoSQL database that scales with your needs.
+              </p>
+              <p className="dark:text-slate-300 text-black leading-relaxed">
+                User avatars and media files are securely stored on <strong className="text-blue-400">Cloudinary</strong>, ensuring fast delivery and reliable access from anywhere in the world.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -154,57 +206,6 @@ const About = () => {
             </div>
           </div>
         </div>  
-      </section>
-
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#080809]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-black dark:text-white mb-12 text-left">How It Works</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Real-time Communication */}
-            <div>
-              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Real-time Communication</h3>
-              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
-                Chat-App uses <strong className="text-blue-400">WebSocket technology</strong> to establish persistent, bidirectional communication channels between clients and the server. This allows messages to be transmitted instantly without the need for constant polling.
-              </p>
-              <p className="dark:text-slate-300 text-black leading-relaxed">
-                When you send a message, it's immediately transmitted to the server, validated, stored in our MongoDB database, and pushed to all relevant recipients in real-time.
-              </p>
-            </div>
-
-            {/* Secure Authentication */}
-            <div>
-              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Secure Authentication</h3>
-              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
-                We integrate <strong className="text-blue-400">OAuth 2.0</strong> context to provide secure, modern authentication. Users can sign in using their existing accounts from trusted providers, eliminating the need to manage additional passwords.
-              </p>
-              <p className="dark:text-slate-300 text-black leading-relaxed">
-                <strong className="text-blue-400">JWT tokens</strong> are used for session management, ensuring that sensitive operations are protected and user data remains secure throughout their session.
-              </p>
-            </div>
-
-            {/* State Management */}
-            <div>
-              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">State Management</h3>
-              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
-                Our application uses <strong className="text-blue-400">React Context API</strong> to manage global state efficiently. This includes user authentication state, theme preferences, and chat data.
-              </p>
-              <p className="dark:text-slate-300 text-black leading-relaxed">
-                Each context (AuthContext, ChatContext, ThemeContext) handles a specific domain, keeping the application organized and maintainable.
-              </p>
-            </div>
-
-            {/* Data Persistence */}
-            <div>
-              <h3 className="text-2xl font-semibold text-black dark:text-white mb-4">Data Persistence</h3>
-              <p className="dark:text-slate-300 text-black mb-4 leading-relaxed">
-                All messages, user profiles, and relationships are stored in <strong className="text-blue-400">MongoDB</strong>, a flexible NoSQL database that scales with your needs.
-              </p>
-              <p className="dark:text-slate-300 text-black leading-relaxed">
-                User avatars and media files are securely stored on <strong className="text-blue-400">Cloudinary</strong>, ensuring fast delivery and reliable access from anywhere in the world.
-              </p>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#080809]">

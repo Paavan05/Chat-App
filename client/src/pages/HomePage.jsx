@@ -1,29 +1,45 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { LockKeyhole, MessageCircle, Zap } from "lucide-react";
+import { LockKeyhole, MessageCircle, Zap, UserPlus, ImagePlus, Activity, UserCog } from "lucide-react";
 import darshboard_image_light from "../assets/dashboard_image_light.png"
 import darshboard_image_dark from "../assets/dashboard_image_dark.png"
 import Navbar from "../components/Navbar";
-import { use, useContext, useRef, useState } from "react";
+import { useEffect, useContext, useRef, useState } from "react";
 import Footer from "../components/Footer"
 import { ThemeContext } from "../../context/ThemeContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import SpotlightCard from '../other/SpotlightCard';
+import FeatureCard from '../components/FeatureCard';
+import { Draggable } from "gsap/draggable";
+
+gsap.registerPlugin(ScrollTrigger, Draggable);
 
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [visitorEmail, setVisitorEmail] = useState("");
   const { theme, toggleTheme } = useContext(ThemeContext)
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const gsapref = useRef(null);
 
-  gsap.registerPlugin(ScrollTrigger);
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
+  const getCardWidth = () => {
+    if (windowWidth >= 768) return 420; // md
+    if (windowWidth >= 640) return 380; // sm
+    return 300; // default/mobile
+  };
+
+  // Hero image scroll animation
   useGSAP(() => {
+    if (!gsapref.current) return;
     const el = gsapref.current.children[0];
-
     gsap.from(el, {
       opacity: 0.5,
       scale: 0.8,
@@ -35,23 +51,115 @@ export default function HomePage() {
         start: "top 100%",
         end: "top 50%",
         toggleActions: "play none none reverse",
-        // markers: true, 
         scrub: 1,
-
       }
+    });
+  }, { revertOnUpdate: true, scope: gsapref });
+
+  const sliderRef = useRef(null);
+
+  const { contextSafe } = useGSAP({ scope: sliderRef });
+
+  const slideToCenter = contextSafe((index) => {
+    if (!sliderRef.current) return;
+
+    const cards = sliderRef.current.children;
+    const cardWidth = getCardWidth();
+    const gap = 32;
+    // Calculate numeric offset for reliability with GSAP
+    const centerX = windowWidth / 2;
+    const currentCardCenter = (index * cardWidth) + (index * gap) + (cardWidth / 2);
+    const xOffset = centerX - currentCardCenter;
+
+    const tl = gsap.timeline({
+      overwrite: "auto",
+      defaults: { duration: 1, ease: "expo.out" }
+    });
+
+    // Move the container
+    tl.to(sliderRef.current, { x: xOffset }, 0);
+
+    // Coordinate all cards
+    Array.from(cards).forEach((card, i) => {
+      const isActive = i === index;
+      tl.to(card, {
+        scale: isActive ? 1.05 : 1,
+        opacity: isActive ? 1 : 0.6,
+        duration: 0.8,
+        ease: "power2.out"
+      }, 0);
     });
   });
 
-  console.log(gsapref)
+  const updateCardStates = (xOffset) => {
+    const cards = sliderRef.current.children;
+    const cardWidth = getCardWidth();
+    const gap = 32;
+    const centerX = windowWidth / 2;
+
+    Array.from(cards).forEach((card, i) => {
+      const cardCenter = xOffset + (i * cardWidth) + (i * gap) + (cardWidth / 2);
+      const distance = Math.abs(centerX - cardCenter);
+      const threshold = cardWidth / 2;
+
+      const isActive = distance < threshold;
+      const progress = Math.max(0, Math.min(1, 1 - (distance / (cardWidth + gap))));
+
+      gsap.to(card, {
+        scale: 1 + (progress * 0.05),
+        opacity: 0.6 + (progress * 0.4),
+        duration: 0.2,
+        overwrite: "auto"
+      });
+    });
+  };
+
+  useGSAP(() => {
+    if (!sliderRef.current) return;
+
+    Draggable.create(sliderRef.current, {
+      type: "x",
+      edgeResistance: 0.65,
+      resistance: 0.5,
+      bounds: {
+        minX: windowWidth / 2 - ((6 * getCardWidth()) + (5 * 32) - (getCardWidth() / 2)),
+        maxX: windowWidth / 2 - (getCardWidth() / 2)
+      },
+      onDrag: function () {
+        updateCardStates(this.x);
+      },
+      onThrowUpdate: function () {
+        updateCardStates(this.x);
+      },
+      snap: function (value) {
+        const cardWidth = getCardWidth();
+        const gap = 32;
+        const index = Math.round((windowWidth / 2 - value - cardWidth / 2) / (cardWidth + gap));
+        const safeIndex = Math.max(0, Math.min(5, index));
+        setFocusedIndex(safeIndex);
+        return windowWidth / 2 - (safeIndex * (cardWidth + gap) + cardWidth / 2);
+      },
+      inertia: true
+    });
+  }, { dependencies: [windowWidth], scope: sliderRef });
+
+  const handleCardClick = (index) => {
+    setFocusedIndex(index);
+    slideToCenter(index);
+  };
+
+  // Ensure center on window resize
+  useGSAP(() => {
+    slideToCenter(focusedIndex);
+  }, { dependencies: [windowWidth, focusedIndex], scope: sliderRef });
 
   return (
     <>
-      {/* navbar */}
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-slate-100 relative overflow-hidden transition-colors">
 
         {/* Hero Section */}
-        <div className="w-full flex flex-col justify-around items-center bg-white dark:bg-[#080809]  transition-colors">
+        <div className="w-full flex flex-col justify-around items-center bg-white dark:bg-[#080809] transition-colors">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -61,7 +169,7 @@ export default function HomePage() {
             <h1 className="text-4xl text-gray-900 w-full dark:text-white md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-gray-900 dark:text-white">Build to Connect</span></h1>
             <p className="text-[#757474] dark:text-slate-300 mb-5 xl:text-lg ">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
             <motion.button
-              whileHover={{ scale: 1, }}
+              whileHover={{ scale: 1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/login")}
               className="backdrop-blur-lg cursor-pointer bg-[#1681E3] border border-white/30 shadow-xl text-white font-semibold px-6 py-3 rounded-full hover:bg-[#0f66b8]"
@@ -70,84 +178,51 @@ export default function HomePage() {
             </motion.button>
           </motion.div>
 
-          {/* dashboard images */}
           <div
             ref={gsapref}
-            className="relative w-[100%] mt-20 h-50 sm:h-110 md:h-130 lg:h-160 xl:h-180 lg:mx-20 xl:mx-43">
-            <img src={theme === "dark" ? darshboard_image_dark : darshboard_image_light} alt="" className="absolute  rounded-2xl px-5 sm:px-0 w-full h-full xl:w-[88%] xl:left-23" />
+            className="relative w-[100%] mt-20 h-50 sm:h-110 md:h-130 lg:h-160 xl:h-180 lg:mx-20 xl:mx-43"
+          >
+            <img src={theme === "dark" ? darshboard_image_dark : darshboard_image_light} alt="" className="absolute rounded-2xl px-5 sm:px-0 w-full h-full xl:w-[88%] xl:left-23" />
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="w-full bg-white dark:bg-[#080809] py-26  px-4 sm:px-6 md:px-10 lg:px-20 xl:px-42 transition-colors">
+        <div className="w-full bg-white dark:bg-[#080809] pt-48 pb-32 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-42 transition-colors overflow-hidden">
 
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl font-semibold mb-10 text-gray-900 dark:text-white"
-          >
-            Features Spotlight
-          </motion.h2>
+          <div className="flex flex-col lg:flex-row justify-between items-start mb-24">
+            <motion.h2
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-gray-900 dark:text-white max-w-4xl leading-[0.85]"
+            >
+              Feature <br /> <span className="text-gray-400 dark:text-neutral-600">Highlights</span>
+            </motion.h2>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            {[
-              {
-                icon: <MessageCircle className="w-10 h-10" />,
-                title: "Blazing Fast Real-Time Sync",
-                desc: "Built with Socket.io messages are delivered instantly.",
-                gradient: "from-blue-500 to-cyan-500",
-                delay: 0
-              },
-              {
-                icon: <LockKeyhole className="w-10 h-10" />,
-                title: "Secure User Authentication",
-                desc: "Leveraging robust foundations for protected communication.",
-                gradient: "from-purple-500 to-pink-500",
-                delay: 0.1
-              },
-              {
-                icon: <Zap className="w-10 h-10" />,
-                title: "Reliable System Performance",
-                desc: "A stable, scalable chat experience with efficient data handling.",
-                gradient: "from-orange-500 to-red-500",
-                delay: 0.2
-              }
-            ].map((f, i) => (
-              <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(0, 229, 255, 0.2)">
-
-                <div className={`absolute inset-0 bg-gradient-to-br ${f.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-
-                <div className={`absolute top-0 left-0 w-0 h-1 bg-gradient-to-r ${f.gradient} group-hover:w-full transition-all duration-500`} />
-
-                <div className="relative z-10">
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className={`mb-6 inline-flex p-3 rounded-xl bg-gradient-to-br ${f.gradient} shadow-lg group-hover:shadow-2xl transition-all duration-300`}
-                  >
-                    <div className="text-white">{f.icon}</div>
-                  </motion.div>
-
-                  <h3 className="text-lg text-gray-900 dark:text-white font-bold mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                    {f.title}
-                  </h3>
-
-                  <p className="text-gray-600 dark:text-slate-300 text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-slate-200 transition-colors duration-300">
-                    {f.desc}
-                  </p>
-
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: f.delay }}
-                    className={`mt-4 w-2 h-2 rounded-full bg-gradient-to-r ${f.gradient}`}
-                  />
-                </div>
-              </SpotlightCard>
-
-            ))}
-
+          <div className="relative mt-20">
+            <div
+              ref={sliderRef}
+              className="flex gap-8 pb-10"
+              style={{ willChange: "transform" }}
+            >
+              {[
+                { icon: <MessageCircle />, title: "Real-Time Chat", desc: "Blazing fast messaging powered by Socket.io for instant connection." },
+                { icon: <LockKeyhole />, title: "Dual Authentication", desc: "Secure login with Google OAuth or traditional email/password." },
+                { icon: <UserPlus />, title: "Friend System", desc: "Build your network by searching users and managing requests." },
+                { icon: <ImagePlus />, title: "Media Sharing", desc: "Share images and files directly in chat with Cloudinary." },
+                { icon: <Activity />, title: "Online Presence", desc: "Stay informed with real-time status indicators in chat." },
+                { icon: <UserCog />, title: "Profile Control", desc: "Personalize your chat experience with customizable avatars." }
+              ].map((f, i) => (
+                <FeatureCard
+                  key={i}
+                  icon={f.icon}
+                  title={f.title}
+                  desc={f.desc}
+                  isActive={focusedIndex === i}
+                  onClick={() => handleCardClick(i)}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -155,22 +230,7 @@ export default function HomePage() {
 
         <div className="relative w-full h-130 flex items-center justify-center bg-white dark:bg-[#080809]">
           <div
-            className="
-      absolute
-      h-90 w-[80%]
-      rounded-3xl
-      flex flex-col items-center justify-center gap-5
-      text-black dark:text-white
-
-      bg-[#F1F4F5]/20 dark:bg-[#0f1115]/40
-      backdrop-blur-xl
-
-      bg-[radial-gradient(#000000_0.85px,transparent_0.85px),radial-gradient(#000000_0.85px,#ffffff_0.85px)]
-      dark:bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px),radial-gradient(#ffffff_0.6px,#080809_0.6px)]
-
-      bg-[length:34px_34px]
-      bg-[position:0_0,17px_17px]
-    "
+            className="absolute h-90 w-[80%] rounded-3xl flex flex-col items-center justify-center gap-5 text-black dark:text-white bg-[#F1F4F5]/20 dark:bg-[#0f1115]/40 backdrop-blur-xl bg-[radial-gradient(#000000_0.85px,transparent_0.85px),radial-gradient(#000000_0.85px,#ffffff_0.85px)] dark:bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px),radial-gradient(#ffffff_0.6px,#080809_0.6px)] bg-[length:34px_34px] bg-[position:0_0,17px_17px]"
           >
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-center">
               Your next conversation starts here.
@@ -183,18 +243,7 @@ export default function HomePage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/login")}
-              className="
-        cursor-pointer
-        px-6 py-3
-        rounded-full
-        font-semibold
-        text-white
-        bg-black/90 dark:bg-white/90
-        dark:text-black
-        border border-white/30 dark:border-black/20
-        backdrop-blur-lg
-        shadow-xl
-      "
+              className="cursor-pointer px-6 py-3 rounded-full font-semibold text-white bg-black/90 dark:bg-white/90 dark:text-black border border-white/30 dark:border-black/20 backdrop-blur-lg shadow-xl"
             >
               Get Started
             </motion.button>

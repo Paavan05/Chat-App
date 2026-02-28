@@ -7,11 +7,10 @@ import Navbar from "../components/Navbar";
 import { useEffect, useContext, useRef, useState } from "react";
 import Footer from "../components/Footer"
 import { ThemeContext } from "../../context/ThemeContext";
+import FeatureCard from '../components/FeatureCard';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/all";
-import FeatureCard from '../components/FeatureCard';
-import { Draggable } from "gsap/draggable";
+import { ScrollTrigger, Draggable } from "gsap/all";
 
 gsap.registerPlugin(ScrollTrigger, Draggable);
 

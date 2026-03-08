@@ -17,7 +17,7 @@ const FeatureCard = ({ icon, title, desc, isActive, onClick }) => {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
             <div className="flex justify-between items-start">
-                <h3 className={`text-3xl md:text-4xl font-semibold leading-tight tracking-tight ${isActive ? "text-white dark:text-black" : "text-gray-900 dark:text-white"}`}>
+                <h3 className={`text-2xl md:text-4xl font-semibold leading-tight tracking-tight ${isActive ? "text-white dark:text-black" : "text-gray-900 dark:text-white"}`}>
                     {title.split(' ').map((word, i) => (
                         <span key={i} className="block">{word}</span>
                     ))}

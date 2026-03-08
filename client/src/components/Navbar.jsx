@@ -79,7 +79,7 @@ const Navbar = () => {
     <nav
       ref={navRef}
       className={`navbar fixed top-5 z-40 w-[95%] xl:w-[85%] flex items-center justify-between
-      px-4 sm:px-6 md:px-8 py-4 rounded-full mx-2.5 sm:mx-5  xl:mx-29 
+      px-4 sm:px-6 md:px-8 py-3 rounded-full mx-2.5 sm:mx-5  xl:mx-29 
       bg-white text-slate-900
       dark:bg-[#080809] dark:border-slate-800 dark:text-slate-100
       transform transition-[colors,transform] duration-300 ${hidden ? "-translate-y-0" : "translate-y-1"}`}
@@ -132,7 +132,7 @@ const Navbar = () => {
 
         <NavLink
           to={authUser ? "/dashboard" : "/login"}
-          className="px-4 py-1.5 border border-gray-900/40 dark:border-blue-400/60 rounded-lg
+          className="px-5 py-2 text-lg border dark:border-blue-400/60 rounded-lg
             hover:bg-[#3599FF] text-white bg-[#1681E3] transition"
         >
           {authUser ? "Start Chatting" : "Login"}

@@ -12,7 +12,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger, Draggable } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger, Draggable);
 
 
 export default function HomePage() {
@@ -22,6 +21,8 @@ export default function HomePage() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const gsapref = useRef(null);
+  const heroRef = useRef(null);
+  gsap.registerPlugin(ScrollTrigger, Draggable);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -113,34 +114,6 @@ export default function HomePage() {
     });
   };
 
-  useGSAP(() => {
-    if (!sliderRef.current) return;
-
-    Draggable.create(sliderRef.current, {
-      type: "x",
-      edgeResistance: 0.65,
-      resistance: 0.5,
-      bounds: {
-        minX: windowWidth / 2 - ((6 * getCardWidth()) + (5 * 32) - (getCardWidth() / 2)),
-        maxX: windowWidth / 2 - (getCardWidth() / 2)
-      },
-      onDrag: function () {
-        updateCardStates(this.x);
-      },
-      onThrowUpdate: function () {
-        updateCardStates(this.x);
-      },
-      snap: function (value) {
-        const cardWidth = getCardWidth();
-        const gap = 32;
-        const index = Math.round((windowWidth / 2 - value - cardWidth / 2) / (cardWidth + gap));
-        const safeIndex = Math.max(0, Math.min(5, index));
-        setFocusedIndex(safeIndex);
-        return windowWidth / 2 - (safeIndex * (cardWidth + gap) + cardWidth / 2);
-      },
-      inertia: true
-    });
-  }, { dependencies: [windowWidth], scope: sliderRef });
 
   const handleCardClick = (index) => {
     setFocusedIndex(index);
@@ -152,21 +125,39 @@ export default function HomePage() {
     slideToCenter(focusedIndex);
   }, { dependencies: [windowWidth, focusedIndex], scope: sliderRef });
 
+  //hero section animation
+  useGSAP(()=>{
+    gsap.from(heroRef.current.children[0], {
+      z: -200,
+      opacity: 1,
+      scale: 1.1,
+      scrollTrigger:{
+        trigger: heroRef.current.children[0],
+        markers: false,
+        start: "top 33.6%",
+        end: "top",
+        scrub: 1,
+        pin: true,
+      }
+    })
+  })
   return (
     <>
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-slate-100 relative overflow-hidden transition-colors">
 
         {/* Hero Section */}
-        <div className="w-full flex flex-col justify-around items-center bg-white dark:bg-[#080809] transition-colors">
+        <div
+        ref={heroRef}
+        className="w-full flex flex-col justify-around items-center bg-white dark:bg-[#080809] transition-colors mt-70">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center z-10 pl-5 xl:pl-0 w-80 xl:w-2/5 pt-70 pb-20"
+            className="text-center z-10 px-5 pb-40 flex flex-col items-center justify-center"
           >
-            <h1 className="text-4xl text-gray-900 w-full dark:text-white md:text-3xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-gray-900 dark:text-white">Build to Connect</span></h1>
-            <p className="text-[#757474] dark:text-slate-300 mb-5 xl:text-lg ">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
+            <h1 className="text-4xl text-gray-900 sm:w-[70%] text-center mx-auto dark:text-white md:text-5xl xl:text-6xl font-bold mb-4">Real-Time Chat, <span className="text-gray-900 dark:text-white">Build to Connect</span></h1>
+            <p className="text-[#757474] dark:text-slate-300 mb-5 sm:w-[70%] text-center mx-auto sm:px-10 xl:text-lg ">Connect instantly with your friends in a sleek, secure and real-time chat experience.</p>
             <motion.button
               whileHover={{ scale: 1 }}
               whileTap={{ scale: 0.95 }}
